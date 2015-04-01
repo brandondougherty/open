@@ -12,4 +12,5 @@
 #import "GADBannerView.h"
 #import "GADInterstitialDelegate.h"
 #import "GADInterstitial.h"
+#import "YALContextMenuTableView.h"
 #endif

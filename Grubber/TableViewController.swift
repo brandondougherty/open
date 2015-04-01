@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstitialDelegate, UISearchDisplayDelegate, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, GMSMapViewDelegate,MKMapViewDelegate  {
+class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDelegate, GADInterstitialDelegate, UISearchDisplayDelegate, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, GMSMapViewDelegate, MKMapViewDelegate  {
     let RADIUS:Int = 5000
     let APIKey: String = "AIzaSyAEYAoIJXeiPhTCfDOb28LsPMDnrUqZDT4"
     var mapView: MKMapView! = MKMapView()
@@ -77,6 +77,8 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
         var myCustomBackButtonItem:UIBarButtonItem = UIBarButtonItem(customView: buttonBack)
         self.navigationItem.leftBarButtonItem  = myCustomBackButtonItem
         
+
+        
         //self.title = "Open"
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 103, height: 35))
         imageView.contentMode = .ScaleAspectFit
@@ -126,8 +128,43 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
         button.layer.cornerRadius = 10.0
         self.view.addSubview(button)
         self.button.hidden = true
+        
+        let start = UIImage(named: "drop_dots")
+        let image0 = UIImage(named: "drop_dots")
+        let image1 = UIImage(named: "dist_drop")
+        let image2 = UIImage(named: "clock_drop")
+        var images:[UIImage] = [image0!,image1!,image2!]
+        var menu = SphereMenu(startPoint: CGPointMake(self.view.frame.width - 30, 40), startImage: start!, submenuImages:images)
+        menu.delegate = self
+        self.navigationController?.view.addSubview(menu)
+        
         if(Singleton.sharedInstance.zipcode){
             self.loadStuff()
+        }
+    }
+    func sphereDidSelected(index: Int) {
+        println(index)
+        if(index == 1){
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                println("before")
+                println(Singleton.sharedInstance.locations[0].name)
+                Singleton.sharedInstance.locations.sort() { $0.distance < $1.distance }
+                println("after")
+                println(Singleton.sharedInstance.locations[0].name)
+                self.tableView.reloadData()
+            })
+            
+        }else if(index == 2){
+          
+             dispatch_async(dispatch_get_main_queue(), {
+                println("before")
+                println(Singleton.sharedInstance.locations[0].howMuchLonger)
+                Singleton.sharedInstance.locations.sort() { $0.howMuchLonger < $1.howMuchLonger }
+                println("after")
+                println(Singleton.sharedInstance.locations[0].howMuchLonger)
+                self.tableView.reloadData()
+             })
         }
     }
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -212,6 +249,10 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
           navigationController?.navigationBar.hidden = true
         navigationController?.popToRootViewControllerAnimated(true)
     }
+    func dropDown(sender:UIBarButtonItem){
+
+    }
+ 
     func buttonAction(sender: UIButton!) {
        animateMapPanelYPositionY(targetPosition: self.view.frame.origin.y - (self.view.frame.height/2) + 64)
        
@@ -275,7 +316,7 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
         dispatch_async(dispatch_get_main_queue(), {
             //animate annotation view
             var target: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: CLLocationDegrees(cell.latitude), longitude:  CLLocationDegrees(cell.longitude))
-            let region = MKCoordinateRegion(center: target, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            let region = MKCoordinateRegion(center: target, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
             
             self.mapView!.setRegion(region, animated: true)
             
@@ -311,7 +352,7 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
           // if(indexPath.row < Singleton.sharedInstance.locations.count){
                 let Stores = Singleton.sharedInstance.locations[indexPath.row]
                 cell.listNumber.text = String(indexPath.row + 1)
-            cell.loadItem(name:Stores.name ,open:Stores.open_now, location: Stores.vicinity, timeLeft: Stores.howMuchLonger,hoursToday: Stores.hours, nextHours: Stores.nextHours, yestHour: Stores.yestHour,phone: Stores.phone,lat: Stores.lat, long : Stores.long, dist: Stores.distance )
+            cell.loadItem(name:Stores.name ,open:Stores.open_now, location: Stores.vicinity, timeLeft: Stores.howMuchLonger,hoursToday: Stores.hours, nextHours: Stores.nextHours, yestHour: Stores.yestHour,phone: Stores.phone,lat: Stores.lat, long : Stores.long, dist: Stores.distance, ratingDouble : Stores.rating )
            // if (indexPath.row == 20 + (Singleton.sharedInstance.page * 20) - 2 && Singleton.sharedInstance.page <= Singleton.sharedInstance.maxPage)
            //   {
                     //Singleton.sharedInstance.page++;
@@ -446,6 +487,7 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
                                 .response {
                                     (request, response, data, error) -> Void in
                                     let jsonPlace: NSDictionary = NSJSONSerialization.JSONObjectWithData(data as NSData!, options: NSJSONReadingOptions.MutableContainers, error: nil) as NSDictionary
+                                    if (jsonPlace["status"]! as? NSDictionary != "UNKNOWN_ERROR"){
                                     if let resultsPlace: NSDictionary = jsonPlace["result"]! as? NSDictionary{
                                         
                                         if let types = resultsPlace["types"]as AnyObject? as? NSArray{
@@ -492,7 +534,7 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
                                                     let minutes = components.minute
                                                     let weekday = components.weekday-1
                                                     // println(closeTimes)
-                                                    println(weekday)
+                                                   // println(weekday)
                                                     
                                                     var todayshours: NSMutableArray = opening_hours["weekday_text"] as NSMutableArray
                                                     todayshours.insertObject(todayshours[6], atIndex: 0)
@@ -537,16 +579,32 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
                                                         if(close1 < time){
                                                             //and if second close time is before 12pm (for places that close at 1am or later)
                                                             if(close2 < 1200){
-                                                                result = self.minutesUntilClose(close2! + 2400,hour: hour,minute: minutesUntil)
+                                                                var hoursUntil = (close2!+2400)-((hour+1)*100)
+                                                                if(hoursUntil >= 59){
+                                                                    hoursUntil = (hoursUntil/100)*60
+                                                                }
+                                                                result = Int(hoursUntil) + minutesUntil
                                                             }else{
-                                                                result = self.minutesUntilClose(close2!,hour: hour,minute: minutesUntil)
+                                                                var hoursUntil = (close2!)-((hour+1)*100)
+                                                                if(hoursUntil >= 59){
+                                                                    hoursUntil = (hoursUntil/100)*60
+                                                                }
+                                                                result = Int(hoursUntil) + minutesUntil
                                                             }
                                                         }else{
                                                             if(close1 < 1200){
-                                                                result = self.minutesUntilClose(close1!+2400,hour: hour,minute: minutesUntil)
+                                                                var hoursUntil = (close1!+2400)-((hour+1)*100)
+                                                                if(hoursUntil >= 59){
+                                                                    hoursUntil = (hoursUntil/100)*60
+                                                                }
+                                                                result = Int(hoursUntil) + minutesUntil
                                                                 
                                                             }else{
-                                                                result = self.minutesUntilClose(close1!,hour: hour,minute: minutesUntil)
+                                                                var hoursUntil = (close1!)-((hour+1)*100)
+                                                                if(hoursUntil >= 59){
+                                                                    hoursUntil = (hoursUntil/100)*60
+                                                                }
+                                                                result = Int(hoursUntil) + minutesUntil
                                                             }
                                                         }
                                                     }
@@ -558,10 +616,18 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
                                                             result = closing! - (hour * 100) - minutesUntil
                                                         }
                                                         if(closing < 1200){
-                                                            result = self.minutesUntilClose(closing!+2400,hour: hour,minute: minutesUntil)
+                                                            var hoursUntil = (closing!+2400)-((hour+1)*100)
+                                                            if(hoursUntil >= 59){
+                                                                hoursUntil = (hoursUntil/100)*60
+                                                            }
+                                                            result = Int(hoursUntil) + minutesUntil
                                                             
                                                         }else{
-                                                            result = self.minutesUntilClose(closing!,hour: hour,minute: minutesUntil)
+                                                            var hoursUntil = (closing!)-((hour+1)*100)
+                                                            if(hoursUntil >= 59){
+                                                                hoursUntil = (hoursUntil/100)*60
+                                                            }
+                                                            result = Int(hoursUntil) + minutesUntil
                                                         }
                                                         
                                                     }else{
@@ -596,7 +662,7 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
                                         }else{
                                             yestHours = "This place should be open!"
                                         }
-                                        //  println(result)
+                                          println("result \(result)")
                                         var dis1 = CLLocation(latitude: Singleton.sharedInstance.lat, longitude: Singleton.sharedInstance.long).distanceFromLocation(CLLocation(latitude: lat, longitude: long))
                                         var dis2 = Double(dis1 * 0.000621371)
                                         var dis : String = ""
@@ -628,16 +694,20 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
                                         )
                                         Singleton.sharedInstance.locations.append(user)
                                         //we have loaded all the places
-                                        println("SINGLETON \(Singleton.sharedInstance.locations.count) Result Count: \(resultCount)")
+                                        //println("SINGLETON \(Singleton.sharedInstance.locations.count) Result Count: \(resultCount)")
                                         if(Singleton.sharedInstance.locations.count == resultCount){
                                             Singleton.sharedInstance.locations.sort { $0.distance < $1.distance }
                                             Singleton.sharedInstance.maxPage = Int(Singleton.sharedInstance.locations.count/20)
                                             
-                                            println("Count:\(Singleton.sharedInstance.locations.count)")
-                                            println("maxPage:\(Singleton.sharedInstance.maxPage)")
+                                           // println("Count:\(Singleton.sharedInstance.locations.count)")
+                                            //println("maxPage:\(Singleton.sharedInstance.maxPage)")
                                         }
                                         
                                     }//result
+                                    }//UNKNOWN_ERROR    check
+                                    else{
+                                        self.loadStuff()
+                                    }
                                     
                             }//end second request
                         }
@@ -727,16 +797,7 @@ class TableViewController:UIViewController, GADBannerViewDelegate, GADInterstiti
     //calculates number of minutes till closing time.
     // close = close time in military time
     // hour = in single digit ex. 15 = 3pm
-    func  minutesUntilClose(close:Int,hour:Int,minute:Int)-> Int{
-        
-        var hoursUntil = (close)-((hour+1)*100)
-        if(hoursUntil >= 59){
-            hoursUntil = (hoursUntil/100)*60
-        }
-        var result = Int(hoursUntil) + minute
-        println(result)
-        return result
-    }
+  
    
    func locationManager(manager: CLLocationManager!,
         didChangeAuthorizationStatus status: CLAuthorizationStatus) {

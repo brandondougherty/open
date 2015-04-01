@@ -60,7 +60,10 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pF4-uO-8E3" userLabel="phone">
                         <rect key="frame" x="18" y="163" width="24" height="24"/>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="hours2" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gs7-4z-3q1">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cKM-pH-SZn" userLabel="star">
+                        <rect key="frame" x="18" y="206" width="24" height="24"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="hours2" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gs7-4z-3q1">
                         <rect key="frame" x="90" y="83" width="241" height="21"/>
                         <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="18"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -88,22 +91,28 @@
                             <action selector="callPlace:" destination="C3r-4R-wjc" eventType="touchUpInside" id="dhI-XU-ajR"/>
                         </connections>
                     </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="1.0mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fl2-Yg-KG1">
-                        <rect key="frame" x="304" y="22" width="60" height="21"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BtX-HN-lo1" userLabel="loc">
+                        <rect key="frame" x="18" y="123" width="22" height="22"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="4.8/5.0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Kk-jA-AGC">
+                        <rect key="frame" x="90" y="204" width="244" height="30"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-ThinItalic" family="Helvetica Neue" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="1.0mi" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fl2-Yg-KG1">
+                        <rect key="frame" x="308" y="22" width="60" height="21"/>
                         <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="16"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BtX-HN-lo1" userLabel="loc">
-                        <rect key="frame" x="18" y="123" width="22" height="22"/>
-                    </imageView>
                 </subviews>
                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 <constraints>
                     <constraint firstItem="UBo-QB-TQO" firstAttribute="leading" secondItem="dsd-VP-O8D" secondAttribute="leadingMargin" constant="54" id="FO3-iC-hhL"/>
                     <constraint firstAttribute="trailingMargin" secondItem="r15-aG-PPn" secondAttribute="trailing" constant="-5" id="cvZ-Ah-YrH"/>
                     <constraint firstItem="ddf-Ww-1LD" firstAttribute="top" secondItem="UBo-QB-TQO" secondAttribute="bottom" constant="-8" id="ljF-2h-aaS"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="Fl2-Yg-KG1" secondAttribute="trailing" constant="22" id="uhs-Xh-cdL"/>
+                    <constraint firstItem="Fl2-Yg-KG1" firstAttribute="trailing" secondItem="dsd-VP-O8D" secondAttribute="trailingMargin" id="nUk-TX-Vhu"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -117,6 +126,8 @@
                 <outlet property="numberIconBackground" destination="XxS-Xs-ANG" id="gfS-nE-gbA"/>
                 <outlet property="phoneIcon" destination="pF4-uO-8E3" id="veV-YG-wfp"/>
                 <outlet property="phoneText" destination="wfJ-ux-p0o" id="K2m-MY-Aod"/>
+                <outlet property="ratingText" destination="3Kk-jA-AGC" id="Ruv-sL-Mzj"/>
+                <outlet property="starIcon" destination="cKM-pH-SZn" id="lu9-pm-qt3"/>
                 <outlet property="stictchfirst" destination="PTK-os-f5O" id="JrI-gC-RNJ"/>
                 <outlet property="stitch1" destination="r15-aG-PPn" id="hBX-cd-HUG"/>
                 <outlet property="stitch2" destination="5rK-ha-iil" id="asq-C1-XYd"/>

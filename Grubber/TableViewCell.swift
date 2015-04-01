@@ -22,6 +22,7 @@ class TableViewCell: UITableViewCell {
     
     @IBOutlet weak var numberIconBackground: UIImageView!
     
+    @IBOutlet weak var starIcon: UIImageView!
     @IBOutlet weak var phoneIcon: UIImageView!
     @IBOutlet weak var clockIcon: UIImageView!
     @IBOutlet weak var locIcon: UIImageView!
@@ -31,6 +32,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var stictchfirst: UIImageView!
     @IBOutlet weak var phoneText: UIButton!
     @IBOutlet weak var distance: UILabel!
+    @IBOutlet weak var ratingText: UILabel!
     @IBAction func getDirections(sender: AnyObject) {
         
         let regionDistance:CLLocationDistance = 10000
@@ -77,7 +79,7 @@ class TableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func loadItem(#name: String, open: Int, location: String,timeLeft:Int,hoursToday:String, nextHours: String, yestHour: String,phone: String, lat: Double, long:Double,dist:String) {
+    func loadItem(#name: String, open: Int, location: String,timeLeft:Int,hoursToday:String, nextHours: String, yestHour: String,phone: String, lat: Double, long:Double,dist:String, ratingDouble:Double) {
         locationName.text = name
         vicinity.text = location
         hours.text = hoursToday
@@ -85,6 +87,7 @@ class TableViewCell: UITableViewCell {
         numberIconBackground.image = UIImage(named: "numberIcon")
         phoneIcon.image = UIImage(named: "phoneIcon")
         clockIcon.image = UIImage(named: "clockicon")
+        starIcon.image = UIImage(named: "star_icon")
         locIcon.image = UIImage(named: "locIcon")
         stitch1.image = UIImage(named: "stitch")
         stitch2.image = UIImage(named: "stitch")
@@ -97,5 +100,12 @@ class TableViewCell: UITableViewCell {
         self.name = name
             
         distance.text = dist
+        var c:String = String(format:"%.1f", ratingDouble)
+        if(ratingDouble == 0){
+            ratingText.text = "No Ratings :("
+        }else{
+            ratingText.text = "\(c) / 5.0"
+        }
+        
     }
 }
