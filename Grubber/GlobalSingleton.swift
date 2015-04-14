@@ -36,4 +36,6 @@ class Singleton {
     var long : Double = 0.0
     var madeRequestLoc : String = ""
     var prevMadeRequestLoc : String = ""
+    var distSort : Bool = false
+    var timeSort : Bool = false
 }

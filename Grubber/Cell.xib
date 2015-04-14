@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -14,22 +13,27 @@
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="C3r-4R-wjc" id="dsd-VP-O8D">
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBo-QB-TQO">
-                        <rect key="frame" x="62" y="13" width="200" height="47"/>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="UBo-QB-TQO">
+                        <rect key="frame" x="69" y="10" width="289" height="46"/>
                         <attributedString key="attributedText">
-                            <fragment content="asdasddn asdasd asd asd asd asd as das d asd asd as d asd asd as da sdasdas d ">
+                            <fragment content="tester">
                                 <attributes>
-                                    <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
-                                    <font key="NSFont" size="18" name="HelveticaNeue"/>
+                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <font key="NSFont" size="17" name="HelveticaNeue-Light"/>
+                                    <font key="NSOriginalFont" size="19" name="HelveticaNeue-Light"/>
                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="truncatingTail" baseWritingDirection="natural" lineHeightMultiple="0.69999999999999996"/>
                                 </attributes>
                             </fragment>
                         </attributedString>
                         <nil key="highlightedColor"/>
+                        <color key="shadowColor" red="0.69728535353535359" green="0.69728535353535359" blue="0.69728535353535359" alpha="1" colorSpace="calibratedRGB"/>
+                        <size key="shadowOffset" width="0.0" height="0.0"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ddf-Ww-1LD">
-                        <rect key="frame" x="63" y="46" width="260" height="16"/>
-                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="12"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1.0mi" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fl2-Yg-KG1">
+                        <rect key="frame" x="337" y="15" width="31" height="16"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="13"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XxS-Xs-ANG">
@@ -43,48 +47,37 @@
                         <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qrS-0R-mqA" userLabel="clock">
-                        <rect key="frame" x="16" y="79" width="27" height="27"/>
+                        <rect key="frame" x="16" y="82" width="27" height="27"/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r15-aG-PPn" userLabel="stitch1">
-                        <rect key="frame" x="5" y="112" width="372" height="2"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r15-aG-PPn" userLabel="stitch1">
+                        <rect key="frame" x="5" y="115" width="372" height="2"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PTK-os-f5O" userLabel="stitch1">
                         <rect key="frame" x="5" y="71" width="372" height="2"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5rK-ha-iil" userLabel="stitch2">
-                        <rect key="frame" x="5" y="153" width="372" height="2"/>
+                        <rect key="frame" x="5" y="159" width="372" height="2"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JV1-WI-rEh" userLabel="stitch2">
-                        <rect key="frame" x="5" y="194" width="372" height="2"/>
+                        <rect key="frame" x="5" y="201" width="372" height="2"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pF4-uO-8E3" userLabel="phone">
-                        <rect key="frame" x="18" y="163" width="24" height="24"/>
+                        <rect key="frame" x="18" y="169" width="24" height="24"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cKM-pH-SZn" userLabel="star">
-                        <rect key="frame" x="18" y="206" width="24" height="24"/>
+                        <rect key="frame" x="18" y="213" width="24" height="24"/>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="hours2" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gs7-4z-3q1">
-                        <rect key="frame" x="90" y="83" width="241" height="21"/>
-                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="18"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="hours2 ada" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gs7-4z-3q1">
+                        <rect key="frame" x="68" y="75" width="270" height="39"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="16"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mor-gE-NFR">
-                        <rect key="frame" x="90" y="118" width="150" height="30"/>
-                        <fontDescription key="fontDescription" name="HelveticaNeue-ThinItalic" family="Helvetica Neue" pointSize="17"/>
-                        <state key="normal" title="Get Directions">
-                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                        </state>
-                        <connections>
-                            <action selector="getDirections:" destination="C3r-4R-wjc" eventType="touchUpInside" id="vBt-XI-SG8"/>
-                        </connections>
-                    </button>
                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wfJ-ux-p0o">
-                        <rect key="frame" x="90" y="159" width="150" height="30"/>
-                        <fontDescription key="fontDescription" name="HelveticaNeue-ThinItalic" family="Helvetica Neue" pointSize="18"/>
+                        <rect key="frame" x="68" y="165" width="150" height="30"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-ThinItalic" family="Helvetica Neue" pointSize="16"/>
                         <state key="normal" title="1-(805)-333-8888">
-                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
                         <connections>
@@ -92,33 +85,43 @@
                         </connections>
                     </button>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BtX-HN-lo1" userLabel="loc">
-                        <rect key="frame" x="18" y="123" width="22" height="22"/>
+                        <rect key="frame" x="18" y="126" width="22" height="22"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="4.8/5.0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Kk-jA-AGC">
-                        <rect key="frame" x="90" y="204" width="244" height="30"/>
+                        <rect key="frame" x="68" y="211" width="244" height="30"/>
                         <fontDescription key="fontDescription" name="HelveticaNeue-ThinItalic" family="Helvetica Neue" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="1.0mi" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fl2-Yg-KG1">
-                        <rect key="frame" x="308" y="22" width="60" height="21"/>
-                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="16"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="mor-gE-NFR">
+                        <rect key="frame" x="68" y="119" width="285" height="37"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-ThinItalic" family="Helvetica Neue" pointSize="15"/>
+                        <state key="normal" title="Get Directions asdad asdadsa asdada asdad adsad">
+                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <connections>
+                            <action selector="getDirections:" destination="C3r-4R-wjc" eventType="touchUpInside" id="vBt-XI-SG8"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 <constraints>
-                    <constraint firstItem="UBo-QB-TQO" firstAttribute="leading" secondItem="dsd-VP-O8D" secondAttribute="leadingMargin" constant="54" id="FO3-iC-hhL"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="r15-aG-PPn" secondAttribute="trailing" constant="-5" id="cvZ-Ah-YrH"/>
-                    <constraint firstItem="ddf-Ww-1LD" firstAttribute="top" secondItem="UBo-QB-TQO" secondAttribute="bottom" constant="-8" id="ljF-2h-aaS"/>
+                    <constraint firstItem="UBo-QB-TQO" firstAttribute="leading" secondItem="dsd-VP-O8D" secondAttribute="leadingMargin" constant="61" id="FO3-iC-hhL"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="gs7-4z-3q1" secondAttribute="trailing" constant="30" id="hp8-69-o71"/>
+                    <constraint firstItem="gs7-4z-3q1" firstAttribute="leading" secondItem="dsd-VP-O8D" secondAttribute="leadingMargin" constant="60" id="hzu-rV-wa2"/>
+                    <constraint firstItem="Fl2-Yg-KG1" firstAttribute="top" secondItem="dsd-VP-O8D" secondAttribute="topMargin" constant="7" id="klN-f6-DQs"/>
+                    <constraint firstItem="mor-gE-NFR" firstAttribute="leading" secondItem="dsd-VP-O8D" secondAttribute="leadingMargin" constant="60" id="llO-KP-KCJ"/>
                     <constraint firstItem="Fl2-Yg-KG1" firstAttribute="trailing" secondItem="dsd-VP-O8D" secondAttribute="trailingMargin" id="nUk-TX-Vhu"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="mor-gE-NFR" secondAttribute="trailing" constant="15" id="pxq-SO-D4o"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="UBo-QB-TQO" secondAttribute="trailing" constant="19" id="t3Q-2V-4cJ"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
             <connections>
                 <outlet property="clockIcon" destination="qrS-0R-mqA" id="Rce-h2-B2t"/>
                 <outlet property="distance" destination="Fl2-Yg-KG1" id="Ior-mF-7Bj"/>
+                <outlet property="getDirectionsLabel" destination="mor-gE-NFR" id="9OA-Et-lmF"/>
                 <outlet property="hours" destination="gs7-4z-3q1" id="Wsm-xd-axe"/>
                 <outlet property="listNumber" destination="Re3-bV-Uf2" id="kK6-RS-hHe"/>
                 <outlet property="locIcon" destination="BtX-HN-lo1" id="2ib-Tf-Hla"/>
@@ -132,9 +135,8 @@
                 <outlet property="stitch1" destination="r15-aG-PPn" id="hBX-cd-HUG"/>
                 <outlet property="stitch2" destination="5rK-ha-iil" id="asq-C1-XYd"/>
                 <outlet property="stitch3" destination="JV1-WI-rEh" id="23k-yo-gDW"/>
-                <outlet property="vicinity" destination="ddf-Ww-1LD" id="P1F-Ou-rOa"/>
             </connections>
-            <point key="canvasLocation" x="119" y="235"/>
+            <point key="canvasLocation" x="119" y="234"/>
         </tableViewCell>
     </objects>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

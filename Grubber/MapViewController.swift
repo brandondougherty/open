@@ -8,8 +8,8 @@
 
 import UIKit
 
-class MapViewController: UIViewController, GMSMapViewDelegate {
-    var gmaps: GMSMapView?
+class MapViewController: UIViewController {
+    //var gmaps: GMSMapView?
     
     override func viewDidLoad() {
         super.viewDidLoad()

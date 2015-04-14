@@ -8,29 +8,36 @@
 
 import UIKit
 import CoreData
+import QuartzCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var NavigationController : UINavigationController?
+    var mask: CALayer?
+    var imageView: UIImageView?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
-         GMSServices.provideAPIKey("AIzaSyBHrmnOPA66NR5YKgfkY62BchjUqWDnm74");
-         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.BlackOpaque
-       NavigationController = UINavigationController()
+        
+        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
+        NavigationController = UINavigationController()
         var ViewController: FrontViewController = FrontViewController()
-       
-       var navigationBarAppearace = UINavigationBar.appearance()
+        
+        var navigationBarAppearace = UINavigationBar.appearance()
         navigationBarAppearace.tintColor = UIColor.whiteColor()
-        navigationBarAppearace.barTintColor = UIColor(red: 188.0/255.0, green: 222.0/255.0, blue: 165.0/255.0, alpha: 1)
-
+        navigationBarAppearace.barTintColor = UIColor(red: 22.0/255.0, green: 196.0/255.0, blue: 89.0/255.0, alpha: 1)
+        
         self.NavigationController?.pushViewController(ViewController, animated: false)
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.window?.rootViewController = NavigationController
         self.window?.backgroundColor = UIColor.whiteColor()
         self.window?.makeKeyAndVisible()
+    
+
+        // Override point for customization after application launch.
+        // GMSServices.provideAPIKey("AIzaSyBHrmnOPA66NR5YKgfkY62BchjUqWDnm74");
+       /* */
        
         return true
     }
@@ -64,7 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.app.Grubber" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as NSURL
+        return urls[urls.count-1] as! NSURL
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
@@ -87,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
             dict[NSUnderlyingErrorKey] = error
-            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
+            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict as [NSObject : AnyObject])
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog("Unresolved error \(error), \(error!.userInfo)")
@@ -120,6 +127,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 abort()
             }
         }
+    }
+    func animateMask() {
+        let keyFrameAnimation = CAKeyframeAnimation(keyPath: "bounds")
+        keyFrameAnimation.delegate = self
+        keyFrameAnimation.duration = 1
+        keyFrameAnimation.beginTime = CACurrentMediaTime() + 1 //add delay of 1 second
+        let initalBounds = NSValue(CGRect: mask!.bounds)
+        let secondBounds = NSValue(CGRect: CGRect(x: 0, y: 0, width: 90, height: 90))
+        let finalBounds = NSValue(CGRect: CGRect(x: 0, y: 0, width: 1500, height: 1500))
+        keyFrameAnimation.values = [initalBounds, secondBounds, finalBounds]
+        keyFrameAnimation.keyTimes = [0, 0.3, 1]
+        keyFrameAnimation.timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut), CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)]
+        self.mask!.addAnimation(keyFrameAnimation, forKey: "bounds")
+    }
+    
+    override func animationDidStop(anim: CAAnimation!, finished flag: Bool) {
+        self.imageView?.removeFromSuperview() //remove mask when animation completes
+        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
+        NavigationController = UINavigationController()
+        var ViewController: FrontViewController = FrontViewController()
+        
+        var navigationBarAppearace = UINavigationBar.appearance()
+        navigationBarAppearace.tintColor = UIColor.whiteColor()
+        navigationBarAppearace.barTintColor = UIColor(red: 46.0/255.0, green: 204.0/255.0, blue: 113.0/255.0, alpha: 1)
+        
+        self.NavigationController?.pushViewController(ViewController, animated: false)
+        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        self.window?.rootViewController = NavigationController
+        self.window?.backgroundColor = UIColor.whiteColor()
+        self.window?.makeKeyAndVisible()
+        
     }
 
 }

@@ -21,6 +21,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var hours: UILabel!
     
     @IBOutlet weak var numberIconBackground: UIImageView!
+    @IBOutlet weak var getDirectionsLabel: UIButton!
     
     @IBOutlet weak var starIcon: UIImageView!
     @IBOutlet weak var phoneIcon: UIImageView!
@@ -60,7 +61,7 @@ class TableViewCell: UITableViewCell {
         
         let openAction = UIAlertAction(title: "Call", style: .Default) { (action) in
             var regex : NSRegularExpression = NSRegularExpression(pattern: "\\D", options:NSRegularExpressionOptions.CaseInsensitive, error: nil)!
-            var newString : String = regex.stringByReplacingMatchesInString(self.phoneNumber, options: nil, range: NSMakeRange(0, self.phoneNumber.utf16Count), withTemplate: "")
+            var newString : String = regex.stringByReplacingMatchesInString(self.phoneNumber, options: nil, range: NSMakeRange(0, count(self.phoneNumber.utf16)), withTemplate: "")
             
             UIApplication.sharedApplication().openURL(NSURL(string: "tel://" + newString)!)
         }
@@ -81,7 +82,7 @@ class TableViewCell: UITableViewCell {
     
     func loadItem(#name: String, open: Int, location: String,timeLeft:Int,hoursToday:String, nextHours: String, yestHour: String,phone: String, lat: Double, long:Double,dist:String, ratingDouble:Double) {
         locationName.text = name
-        vicinity.text = location
+        getDirectionsLabel.setTitle(location, forState: .Normal)
         hours.text = hoursToday
         let image1 = UIImage(named: "green")
         numberIconBackground.image = UIImage(named: "numberIcon")

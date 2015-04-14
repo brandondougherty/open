@@ -22,14 +22,31 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
     override func viewDidLoad() {
        initLocationManager();
         navigationController?.navigationBar.hidden = true
-        navigationController?.view.backgroundColor = UIColor(red: 188.0/255.0, green: 222.0/255.0, blue: 165.0/255.0, alpha: 1)
+        navigationController?.view.backgroundColor = UIColor(red: 22.0/255.0, green: 196.0/255.0, blue: 89.0/255.0, alpha: 1)
         //LOGO
         let imageName = "mainlogo.png"
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
-        imageView.frame = CGRect(x: self.view.frame.width/2 - 104, y: self.view.frame.height/3 - 120, width: 208, height: 104)
+        imageView.frame = CGRect(x: self.view.frame.width/2 - 107, y: self.view.frame.height/3 - 130, width: 215, height: 100)
         view.addSubview(imageView)
-        println(self.view.frame.width)
+        //slogan img
+        let sloganimageName = "slogan"
+        let sloganimage = UIImage(named: sloganimageName)
+        let sloganimageView = UIImageView(image: sloganimage!)
+        sloganimageView.frame = CGRect(x: self.view.frame.width/2 - 104, y: self.view.frame.height/3 - 20, width: 215, height: 15)
+        view.addSubview(sloganimageView)
+        //food text img
+        let foodTextimageName = "foodText"
+        let foodTextimage = UIImage(named: foodTextimageName)
+        let foodTextimageView = UIImageView(image: foodTextimage!)
+        foodTextimageView.frame = CGRect(x: self.view.frame.width/2-100, y: self.view.frame.height - 40, width: 60, height: 15)
+        view.addSubview(foodTextimageView)
+        //drinks text img
+        let drinkTextimageName = "drinkText"
+        let drinkTextimage = UIImage(named: drinkTextimageName)
+        let drinkTextimageView = UIImageView(image: drinkTextimage!)
+        drinkTextimageView.frame = CGRect(x: self.view.frame.width/2 + 19, y: self.view.frame.height - 40, width: 93, height: 15)
+        view.addSubview(drinkTextimageView)
         //SLIDER
         var sliderDemo = UISlider(frame:CGRectMake(self.view.frame.width/2 - 95, self.view.frame.height/2 + 10 , 190, 100))
         sliderDemo.setThumbImage(UIImage(named: "sliderthumb"), forState: .Normal)
@@ -75,7 +92,7 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
         //Box one location button
         let buttonImageNormalLoc = UIImage(named: "locationIcon") as UIImage?
         let buttonImageHoverLoc = UIImage(named: "locationIcon") as UIImage?
-        let buttonLoc   = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
+        let buttonLoc   = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
         buttonLoc.frame = CGRectMake(self.view.frame.width/2 + 67.5, self.view.frame.height/2 - 78, 45, 45)
         buttonLoc.setImage(buttonImageNormalLoc, forState: .Normal)
         buttonLoc.setImage(buttonImageHoverLoc,forState: .Highlighted)
@@ -93,8 +110,8 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
         //Button Food
         let buttonImageNormal = UIImage(named: "buttonLeft") as UIImage?
         let buttonImageHover = UIImage(named: "buttonLeftHover") as UIImage?
-        let button   = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
-        button.frame = CGRectMake(self.view.frame.width/2-110, self.view.frame.height/3 * 2 + 50, 96, 96)
+        let button   = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+        button.frame = CGRectMake(self.view.frame.width/2-115, self.view.frame.height - 145, 96, 96)
         button.setImage(buttonImageNormal, forState: .Normal)
         button.setImage(buttonImageHover,forState: .Highlighted)
         button.addTarget(self, action: "foodAction:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -103,20 +120,20 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
         //Button Bar
         let button2ImageNormal = UIImage(named: "buttonRight") as UIImage?
         let button2ImageHover = UIImage(named: "buttonRightHover") as UIImage?
-        let button2   = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
-        button2.frame = CGRectMake(self.view.frame.width/2 + 20, self.view.frame.height/3 * 2 + 50, 96, 96)
+        let button2   = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+        button2.frame = CGRectMake(self.view.frame.width/2 + 15, self.view.frame.height - 145, 96, 96)
         button2.setImage(button2ImageNormal, forState: .Normal)
         button2.setImage(button2ImageHover,forState: .Highlighted)
         button2.addTarget(self, action: "barAction:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(button2)
         
     }
-    func textFieldShouldReturn(textField: UITextField!) -> Bool // called when 'return' key pressed. return NO to ignore.
+    func textFieldShouldReturn(textField: UITextField) -> Bool // called when 'return' key pressed. return NO to ignore.
     {
         textField.resignFirstResponder()
         return true;
     }
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         //myTextField.resignFirstResponder()
         self.view.endEditing(true)
     }
@@ -195,9 +212,9 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
         println("value--\(val)")
         var feedbackString: String;
         if(val > 1){
-          feedbackString = NSString(format:"%.0lfmi",val)
+          feedbackString = NSString(format:"%.0lfmi",val) as String
         }else{
-          feedbackString = NSString(format: "%.2lfmi", val)
+          feedbackString = NSString(format: "%.2lfmi", val) as String
         }
         
         Singleton.sharedInstance.sliderValue = Float(val) * 1609.34

@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDelegate, GADInterstitialDelegate, UISearchDisplayDelegate, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, GMSMapViewDelegate, MKMapViewDelegate  {
+class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDelegate, GADInterstitialDelegate, UISearchDisplayDelegate, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate  {
     let RADIUS:Int = 5000
     let APIKey: String = "AIzaSyAEYAoIJXeiPhTCfDOb28LsPMDnrUqZDT4"
     var mapView: MKMapView! = MKMapView()
@@ -32,9 +32,10 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     var imageCache = NSMutableDictionary()
     var tableView : UITableView!
     var tempView : UIView!
-    var gmaps: GMSMapView?
+   // var gmaps: GMSMapView?
     var button: UIButton!
     var loadingView: UIButton!
+    var menu : SphereMenu!
     //Animations
   
     var snap: UISnapBehavior!
@@ -53,33 +54,33 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     
     //search bar
     var searchBar :UISearchBar!
-    var searchDisplayControllers : UISearchDisplayController!
+    var searchDisplayControllers : UISearchController!
     
     //Ads  
     var interstitial:GADInterstitial?
     var loadRequestAllowed = true
     var bannerDisplayed = false
     let statusbarHeight:CGFloat = 20.0
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         if(Singleton.sharedInstance.zipcode != true){
             initLocationManager();
         }
+        let deviceModel = UIDevice.currentDevice().model
+        println(deviceModel)
         navigationController?.navigationBar.hidden = false
+        navigationController?.view.backgroundColor = UIColor(red: 22.0/255.0, green: 196.0/255.0, blue: 89.0/255.0, alpha: 1)
         self.view.backgroundColor = UIColor.whiteColor()
        //HOME BUTTON
         let buttonImageBack = UIImage(named: "backIcon") as UIImage?
-        let buttonBack   = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
+        let buttonBack   = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
         buttonBack.addTarget(self, action: "popToRoot:", forControlEvents: UIControlEvents.TouchUpInside)
         buttonBack.frame = CGRectMake(20, 20, 30, 50)
         buttonBack.setImage(buttonImageBack, forState: .Normal)
         var myCustomBackButtonItem:UIBarButtonItem = UIBarButtonItem(customView: buttonBack)
         self.navigationItem.leftBarButtonItem  = myCustomBackButtonItem
         
-
-        
-        //self.title = "Open"
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 103, height: 35))
         imageView.contentMode = .ScaleAspectFit
         // 4
@@ -97,7 +98,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         self.tableView.dataSource = self;
         self.tableView.rowHeight = 65
         //map container
-        self.tempView = UIView(frame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 30, self.view.frame.size.width, self.view.frame.height/2))
+        self.tempView = UIView(frame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 20, self.view.frame.size.width, self.view.frame.height/2))
 
         //pull to refresh
         self.refreshControler = UIRefreshControl()
@@ -118,12 +119,12 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
         tableView.separatorInset = UIEdgeInsetsZero
         
-        self.button = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
+        self.button = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
         button.frame = CGRectMake(self.view.frame.width/2-30, self.view.frame.size.height/2, 60, 60)
         button.setImage(UIImage(named: "mapButton"), forState: .Normal)
         button.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
-        let panGesture = UIPanGestureRecognizer(target: self, action: "buttonAction :")
-        button.addGestureRecognizer(panGesture)
+        //let panGesture = UIPanGestureRecognizer(target: self, action: "buttonAction :")
+        //button.addGestureRecognizer(panGesture)
         
         button.layer.cornerRadius = 10.0
         self.view.addSubview(button)
@@ -134,7 +135,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         let image1 = UIImage(named: "dist_drop")
         let image2 = UIImage(named: "clock_drop")
         var images:[UIImage] = [image0!,image1!,image2!]
-        var menu = SphereMenu(startPoint: CGPointMake(self.view.frame.width - 30, 40), startImage: start!, submenuImages:images)
+        menu = SphereMenu(startPoint: CGPointMake(self.view.frame.width - 30, 40), startImage: start!, submenuImages:images)
         menu.delegate = self
         self.navigationController?.view.addSubview(menu)
         
@@ -147,11 +148,15 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         if(index == 1){
             
             dispatch_async(dispatch_get_main_queue(), {
-                println("before")
-                println(Singleton.sharedInstance.locations[0].name)
-                Singleton.sharedInstance.locations.sort() { $0.distance < $1.distance }
-                println("after")
-                println(Singleton.sharedInstance.locations[0].name)
+                if(Singleton.sharedInstance.distSort){
+                    Singleton.sharedInstance.locations.sort() { $0.name < $1.name }
+                    Singleton.sharedInstance.locations.sort() { $0.distance < $1.distance }
+                    Singleton.sharedInstance.distSort = false
+                }else{
+                    Singleton.sharedInstance.locations.sort() { $0.name < $1.name }
+                    Singleton.sharedInstance.locations.sort() { $0.distance > $1.distance }
+                    Singleton.sharedInstance.distSort = true
+                }
                 self.tableView.reloadData()
             })
             
@@ -167,21 +172,19 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
              })
         }
     }
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-        //myTextField.resignFirstResponder()
-        self.view.endEditing(true)
-    }
+  
     //Interstitial func
     func createAndLoadInterstitial()->GADInterstitial {
         println("createAndLoadInterstitial")
         var interstitial = GADInterstitial()
         interstitial.delegate = self
         interstitial.adUnitID = "ca-app-pub-1449159202125999/8102937464"
+        
         var requestAd = GADRequest()
         if(coord != nil){
             requestAd.setLocationWithLatitude(CGFloat(Singleton.sharedInstance.lat), longitude: CGFloat(Singleton.sharedInstance.long), accuracy: 10000)
         }
-        requestAd.testDevices = [ GAD_SIMULATOR_ID ];
+       // requestAd.testDevices = [ GAD_SIMULATOR_ID ];
         interstitial.loadRequest(requestAd)
         
         return interstitial
@@ -246,15 +249,24 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     func popToRoot(sender:UIBarButtonItem){
         Singleton.sharedInstance.page = 0;
         interstitial = nil
+        for subview in self.navigationController!.view.subviews {
+            if (subview.tag == 1001 || subview.tag == 1002 || subview.tag == 1003) {
+                print(subview)
+                menu.start?.image = nil
+                subview.removeFromSuperview()
+            }
+            
+        }
           navigationController?.navigationBar.hidden = true
-        navigationController?.popToRootViewControllerAnimated(true)
+        navigationController?.popViewControllerAnimated(true)
+        
     }
     func dropDown(sender:UIBarButtonItem){
 
     }
  
     func buttonAction(sender: UIButton!) {
-       animateMapPanelYPositionY(targetPosition: self.view.frame.origin.y - (self.view.frame.height/2) + 64)
+       animateMapPanelYPositionY(targetPosition: self.view.frame.origin.y - (self.view.frame.height/2) + 64) //64 if iphone6
        
         self.tableView.frame.size.height = self.view.frame.size.height
         self.tableView.frame.origin.y =  0
@@ -266,7 +278,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         button.addGestureRecognizer(panGesture)
     }
     func returnAction(sender: UIButton!) {
-        animateMapPanelYPositionY(targetPosition: 30)
+        animateMapPanelYPositionY(targetPosition: 20)
         self.tableView.frame.size.height = self.view.frame.size.height/2 + 30
         self.tableView.frame.origin.y = self.view.frame.size.height/2 - 30
         button.removeTarget(self, action: "returnAction:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -311,9 +323,10 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
             Singleton.sharedInstance.cellExpansionArray[indexPath.row] = 1
         }
         tableView.beginUpdates();
-         let cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as TableViewCell
-
+         let cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
+        
         dispatch_async(dispatch_get_main_queue(), {
+            
             //animate annotation view
             var target: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: CLLocationDegrees(cell.latitude), longitude:  CLLocationDegrees(cell.longitude))
             let region = MKCoordinateRegion(center: target, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
@@ -334,7 +347,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
     }
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if indexPath.row == selectedRowIndex.row && Singleton.sharedInstance.cellExpansionArray[indexPath.row] == 1{
+        if Singleton.sharedInstance.cellExpansionArray[indexPath.row] == 1{
             
             return self.view.frame.size.height/2 - 30
         }
@@ -342,7 +355,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //ask for a reusable cell from the tableview, the tableview will create a new one if it doesn't have any
-        let cell: TableViewCell = self.tableView.dequeueReusableCellWithIdentifier("Cell") as TableViewCell
+        let cell: TableViewCell = self.tableView.dequeueReusableCellWithIdentifier("Cell") as! TableViewCell
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.separatorInset = UIEdgeInsetsZero
         cell.layoutMargins = UIEdgeInsetsZero
@@ -403,7 +416,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         if (locationFixAchieved == false) {
             locationFixAchieved = true
             var locationArray = locations as NSArray
-            var locationObj = locationArray.lastObject as CLLocation
+            var locationObj = locationArray.lastObject as! CLLocation
             self.coord = locationObj.coordinate
             println("createAndLoadInterstitial")
             interstitial = createAndLoadInterstitial()
@@ -432,7 +445,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         mapView.setRegion(region, animated: true)
         
         //loading wheel
-        self.loadingView = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
+        self.loadingView = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
         loadingView.frame = CGRectMake(self.view.frame.width/2-25, self.view.frame.height/2 - 25, 50, 50)
         let loadImage = UIImage(named: "baricon")
         loadingView.setImage(loadImage, forState: .Normal)
@@ -460,9 +473,9 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                 .response {
                     (request, response, data, error) -> Void in
                     println(response)
-                    let json: NSDictionary = NSJSONSerialization.JSONObjectWithData(data as NSData!, options: NSJSONReadingOptions.MutableContainers, error: nil) as NSDictionary
+                    let json: NSDictionary = NSJSONSerialization.JSONObjectWithData(data as! NSData!, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSDictionary
                     Singleton.sharedInstance.sliderRequestValue = Singleton.sharedInstance.sliderValue
-                    let results: NSArray = json["results"] as NSArray
+                    let results: NSArray = json["results"] as! NSArray
                     var resultCount: Int? = results.count
                     if (resultCount == 0)
                     {
@@ -472,22 +485,22 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                         for var i = 0; i < resultCount; i++ {
                             Singleton.sharedInstance.i += 1
                             
-                            let geometry: NSDictionary = results[i]["geometry"]! as NSDictionary
-                            let location: NSDictionary = geometry["location"]! as NSDictionary
-                            let lat: Double = location["lat"] as Double
-                            let long: Double = location["lng"] as Double
-                            let placeId: String = results[i]["place_id"] as String
+                            let geometry: NSDictionary = results[i]["geometry"]! as! NSDictionary
+                            let location: NSDictionary = geometry["location"]! as! NSDictionary
+                            let lat: Double = location["lat"] as! Double
+                            let long: Double = location["lng"] as! Double
+                            let placeId: String = results[i]["place_id"] as! String
                             var open_now: Int?
                             var todayshour: String?
                             var tomhours : String?
                             var yestHours: String?
-                            var result: Int = 0
+                            
                             var urlString1 = "https://maps.googleapis.com/maps/api/place/details/json?placeid=\(placeId)&key=\(self.APIKey)"
                             manager.request(.GET, urlString1)
                                 .response {
                                     (request, response, data, error) -> Void in
-                                    let jsonPlace: NSDictionary = NSJSONSerialization.JSONObjectWithData(data as NSData!, options: NSJSONReadingOptions.MutableContainers, error: nil) as NSDictionary
-                                    if (jsonPlace["status"]! as? NSDictionary != "UNKNOWN_ERROR"){
+                                    let jsonPlace: NSDictionary = NSJSONSerialization.JSONObjectWithData(data as! NSData!, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSDictionary
+                                    if (jsonPlace["status"]! as? NSDictionary != "@UNKNOWN_ERROR"){
                                     if let resultsPlace: NSDictionary = jsonPlace["result"]! as? NSDictionary{
                                         
                                         if let types = resultsPlace["types"]as AnyObject? as? NSArray{
@@ -510,20 +523,21 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                                         }else{
                                             self.priceLevel = 0
                                         }
-                                        let icon: String = resultsPlace["icon"]! as String
-                                        let name: String = resultsPlace["name"]! as String
+                                        let icon: String = resultsPlace["icon"]! as! String
+                                        let name: String = resultsPlace["name"]! as! String
                                         if let phone = resultsPlace["formatted_phone_number"] as AnyObject? as? String{
                                             self.phone = resultsPlace["formatted_phone_number"]! as? String
                                         }else{
                                             self.phone = "unknown"
                                         }
-                                        
+                                        var resultz: Int!
                                         if let open: NSDictionary = resultsPlace["opening_hours"] as? NSDictionary {
                                             open_now = open["open_now"] as? Int
                                             // remeber to check if opening_hours exists so it doesnt crash
-                                            let opening_hours: NSDictionary = resultsPlace["opening_hours"] as NSDictionary
-                                            let periods: NSArray = opening_hours["periods"] as NSArray
-                                            
+                                            let opening_hours: NSDictionary = resultsPlace["opening_hours"] as! NSDictionary
+                                            let periods: NSArray = opening_hours["periods"] as! NSArray
+                                            println("Periods count : \(periods.count)")
+                                            println("Periods : \(periods)")
                                             if(periods.count > 1){
                                                 if let closeTimes: NSArray = periods.valueForKey("close") as? NSArray{
                                                     //get current time
@@ -534,9 +548,10 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                                                     let minutes = components.minute
                                                     let weekday = components.weekday-1
                                                     // println(closeTimes)
-                                                   // println(weekday)
                                                     
-                                                    var todayshours: NSMutableArray = opening_hours["weekday_text"] as NSMutableArray
+                                                    println(opening_hours["weekday_text"])
+                                                    
+                                                    var todayshours: NSMutableArray = opening_hours["weekday_text"] as! NSMutableArray
                                                     todayshours.insertObject(todayshours[6], atIndex: 0)
                                                     todayshour = todayshours[components.weekday - 1] as? String
                                                     
@@ -553,8 +568,8 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                                                     var closeTimesArray:[String] = []
                                                     //dual open close times per day
                                                     for(idx, theDay) in enumerate(closeTimes){
-                                                        var day:Int = theDay.valueForKey("day") as Int
-                                                        var time:String = theDay.valueForKey("time") as String
+                                                        var day:Int = theDay.valueForKey("day") as! Int
+                                                        var time:String = theDay.valueForKey("time") as! String
                                                         if(closeTimes.count == 7){
                                                             if(idx == weekday){
                                                                 closeTimesArray.append(time)
@@ -568,9 +583,11 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                                                     
                                                     //   println(closeTimesArray)
                                                     var minutesUntil = 60 - minutes
-                                                    var result:Int
+                                                    
+                                                    //var result:Int?
                                                     if(closeTimesArray.count > 1)
                                                     {
+                                                        println("yesssssssssssssssssssss")
                                                         //multiple close times throughout the day
                                                         var close1: Int? = closeTimesArray[0].toInt()
                                                         var close2: Int? = closeTimesArray[1].toInt()
@@ -583,13 +600,13 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                                                                 if(hoursUntil >= 59){
                                                                     hoursUntil = (hoursUntil/100)*60
                                                                 }
-                                                                result = Int(hoursUntil) + minutesUntil
+                                                                resultz = Int(hoursUntil) + minutesUntil
                                                             }else{
                                                                 var hoursUntil = (close2!)-((hour+1)*100)
                                                                 if(hoursUntil >= 59){
                                                                     hoursUntil = (hoursUntil/100)*60
                                                                 }
-                                                                result = Int(hoursUntil) + minutesUntil
+                                                                resultz = Int(hoursUntil) + minutesUntil
                                                             }
                                                         }else{
                                                             if(close1 < 1200){
@@ -597,47 +614,69 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                                                                 if(hoursUntil >= 59){
                                                                     hoursUntil = (hoursUntil/100)*60
                                                                 }
-                                                                result = Int(hoursUntil) + minutesUntil
+                                                                resultz = Int(hoursUntil) + minutesUntil
                                                                 
                                                             }else{
                                                                 var hoursUntil = (close1!)-((hour+1)*100)
                                                                 if(hoursUntil >= 59){
                                                                     hoursUntil = (hoursUntil/100)*60
                                                                 }
-                                                                result = Int(hoursUntil) + minutesUntil
+                                                                resultz = Int(hoursUntil) + minutesUntil
                                                             }
                                                         }
                                                     }
                                                     else if(closeTimesArray.count == 1)
                                                     {
+                                                        
+                                                        println("yessssssss 2")
                                                         var closing:Int? = closeTimesArray[0].toInt()
                                                         //closing is 2130 hour is 2100
                                                         if(Int(closing!/100) == hour){
-                                                            result = closing! - (hour * 100) - minutesUntil
+                                                            resultz = closing! - (hour * 100) - minutesUntil
                                                         }
                                                         if(closing < 1200){
                                                             var hoursUntil = (closing!+2400)-((hour+1)*100)
                                                             if(hoursUntil >= 59){
                                                                 hoursUntil = (hoursUntil/100)*60
                                                             }
-                                                            result = Int(hoursUntil) + minutesUntil
+                                                            resultz = Int(hoursUntil) + minutesUntil
                                                             
                                                         }else{
                                                             var hoursUntil = (closing!)-((hour+1)*100)
                                                             if(hoursUntil >= 59){
                                                                 hoursUntil = (hoursUntil/100)*60
                                                             }
-                                                            result = Int(hoursUntil) + minutesUntil
+                                                            resultz = Int(hoursUntil) + minutesUntil
                                                         }
                                                         
                                                     }else{
                                                         //something went wrong and we dont know the close time
                                                         //parse from string version?
-                                                        result = 5
+                                                        resultz = 5000
                                                     }//update UI
                                                     
                                                 }//if close times
+                                                else{
+                                                    resultz = 5000
+                                                }
                                             }//if periods count
+                                            else{
+                                                //test text value
+                                               
+                                                //resultz = 5000
+                                                if let closeTimes: Bool = periods.valueForKey("close") as? Bool{
+                                                    println(closeTimes)
+                                                    if(closeTimes){
+                                                        println("in here 1")
+                                                        resultz = 5000
+                                                        todayshour = "Open 24 hours"
+                                                    }
+                                                }else{
+                                                     println("in here")
+                                                    resultz = 5000
+                                                    todayshour = "Open 24 hours"
+                                                }
+                                            }
                                         }//opening hours
                                         var pinCoord: CLLocationCoordinate2D = CLLocationCoordinate2DMake(lat, long);
                                         var pin: MapPin = MapPin(coordinate: pinCoord, title: "test", subtitle: "tets")
@@ -662,7 +701,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                                         }else{
                                             yestHours = "This place should be open!"
                                         }
-                                          println("result \(result)")
+                                          println("result \(resultz)")
                                         var dis1 = CLLocation(latitude: Singleton.sharedInstance.lat, longitude: Singleton.sharedInstance.long).distanceFromLocation(CLLocation(latitude: lat, longitude: long))
                                         var dis2 = Double(dis1 * 0.000621371)
                                         var dis : String = ""
@@ -684,7 +723,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                                             icon: icon,
                                             lat: lat,
                                             long: long,
-                                            howMuchLonger: result,
+                                            howMuchLonger: resultz!,
                                             hours: todayshour!,
                                             nextHours: tomhours!,
                                             yestHour: yestHours!,
