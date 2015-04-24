@@ -38,4 +38,5 @@ class Singleton {
     var prevMadeRequestLoc : String = ""
     var distSort : Bool = false
     var timeSort : Bool = false
+    var scrollNumber : Int = 0
 }

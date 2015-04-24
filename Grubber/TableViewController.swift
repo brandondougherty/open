@@ -345,6 +345,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         })
         tableView.endUpdates();
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+        
     }
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if Singleton.sharedInstance.cellExpansionArray[indexPath.row] == 1{
@@ -461,8 +462,6 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         self.isRotating = true
         self.loadingView.hidden = false
         self.tableView.hidden = true
-        if(Singleton.sharedInstance.madeRequest != Singleton.sharedInstance.previousRequest || Singleton.sharedInstance.sliderValue != Singleton.sharedInstance.sliderRequestValue || Singleton.sharedInstance.madeRequestLoc != Singleton.sharedInstance.prevMadeRequestLoc)
-        {
             Singleton.sharedInstance.locations = [Location]()
             Singleton.sharedInstance.previousRequest = Singleton.sharedInstance.madeRequest
             Singleton.sharedInstance.prevMadeRequestLoc = Singleton.sharedInstance.madeRequestLoc
@@ -753,8 +752,6 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                         
                     }
             }
-            
-        }//end if made request statement
     }
    func mapViewDidFinishRenderingMap(mapView: MKMapView!, fullyRendered: Bool) {
             for var x = 0; x < Singleton.sharedInstance.locations.count - 1; x++ {
@@ -823,8 +820,39 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                             annotations.transform = CGAffineTransformMakeScale(1, 1)
                             var scrollIndexPath : NSIndexPath = NSIndexPath(forRow: rowInt, inSection: 0)
                             var scrollIndexPath2 : NSIndexPath = NSIndexPath(forRow: rowInt - 1, inSection: 0)
+                            var scrollIndexPath3 : NSIndexPath = NSIndexPath(forRow: rowInt + 2, inSection: 0)
+                            self.tableView.scrollToRowAtIndexPath(scrollIndexPath, atScrollPosition: .None, animated: true)
                             self.tableView.scrollToRowAtIndexPath(scrollIndexPath, atScrollPosition: .Middle, animated: true)
-                            self.tableView(self.tableView, didSelectRowAtIndexPath: scrollIndexPath2);
+                            if(rowInt - 1 > Singleton.sharedInstance.scrollNumber && rowInt > 1){
+                                //scolling down
+                                Singleton.sharedInstance.scrollNumber = rowInt - 1
+                                self.tableView.scrollToRowAtIndexPath(scrollIndexPath2, atScrollPosition: .Middle, animated: true)
+                            }else{
+                                //scrolling up
+                                if(rowInt < Singleton.sharedInstance.locations.count - 2){
+                                    Singleton.sharedInstance.scrollNumber = rowInt - 1
+                                    self.tableView.scrollToRowAtIndexPath(scrollIndexPath3, atScrollPosition: .Middle, animated: true)
+                                }
+                            }
+                            
+                            //
+                            //if any are set to 1, then close it
+                            for var index = 0; index < Singleton.sharedInstance.locations.count; index++ {
+                                if(index != rowInt &&  Singleton.sharedInstance.cellExpansionArray[index] == 1){
+                                    Singleton.sharedInstance.cellExpansionArray[index] = 0
+                                    self.tableView.beginUpdates();
+                                    let cell: TableViewCell = self.tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: NSIndexPath(forRow: index, inSection: 0)) as! TableViewCell
+                                    self.tableView.endUpdates();
+                                    self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: UITableViewRowAnimation.None)
+                                }else
+                                if(index == rowInt){
+                                    Singleton.sharedInstance.cellExpansionArray[index - 1] = 1
+                                    self.tableView.beginUpdates();
+                                    let cell: TableViewCell = self.tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: NSIndexPath(forRow: index - 1, inSection: 0)) as! TableViewCell
+                                    self.tableView.endUpdates();
+                                    self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: index - 1, inSection: 0)], withRowAnimation: UITableViewRowAnimation.None)
+                                }
+                            }
                         })
                 })
                 //scroll to cell

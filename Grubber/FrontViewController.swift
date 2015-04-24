@@ -127,6 +127,10 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
         button2.addTarget(self, action: "barAction:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(button2)
         
+        //add help view
+        //add checkbox to select hide perm
+        //close button
+        
     }
     func textFieldShouldReturn(textField: UITextField) -> Bool // called when 'return' key pressed. return NO to ignore.
     {
