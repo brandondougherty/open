@@ -127,6 +127,7 @@
 		A4AD5D831AD64A230039525A /* slogan@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A4AD5D801AD64A230039525A /* slogan@3x.png */; };
 		A4AD5D851AD64B0D0039525A /* iphone-6+-iphone-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A4AD5D841AD64B0D0039525A /* iphone-6+-iphone-app-icon.png */; };
 		A4BE64DE1AD4E778008935F1 /* stitch.png in Resources */ = {isa = PBXBuildFile; fileRef = A4BE64DD1AD4E778008935F1 /* stitch.png */; };
+		A4EBE8EC1AEDAD6D00DE0B42 /* RegexClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EBE8EB1AEDAD6D00DE0B42 /* RegexClass.swift */; };
 		A4F94B401ACF9DAA00B84AFB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4F94B3F1ACF9DAA00B84AFB /* LaunchScreen.xib */; };
 /* End PBXBuildFile section */
 
@@ -286,6 +287,7 @@
 		A4AD5D801AD64A230039525A /* slogan@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slogan@3x.png"; sourceTree = "<group>"; };
 		A4AD5D841AD64B0D0039525A /* iphone-6+-iphone-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphone-6+-iphone-app-icon.png"; sourceTree = "<group>"; };
 		A4BE64DD1AD4E778008935F1 /* stitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stitch.png; sourceTree = "<group>"; };
+		A4EBE8EB1AEDAD6D00DE0B42 /* RegexClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegexClass.swift; sourceTree = "<group>"; };
 		A4F94B3F1ACF9DAA00B84AFB /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -593,6 +595,7 @@
 			isa = PBXGroup;
 			children = (
 				A39E0B991A5E20380097B3B8 /* Marker.swift */,
+				A4EBE8EB1AEDAD6D00DE0B42 /* RegexClass.swift */,
 				A3AE3FC61A60F2320023F2F9 /* GlobalSingleton.swift */,
 				A3DA35B71A7F398B00AED5CD /* timer.swift */,
 				A3A882A21A64C1D300276C86 /* MapAnnotation.swift */,
@@ -789,6 +792,7 @@
 				A3DA35B41A7EC5B000AED5CD /* almofire.swift in Sources */,
 				A3EBCF911A10337D007DCE06 /* MapViewController.swift in Sources */,
 				A3EBCFAC1A1040BD007DCE06 /* GooglerMapClass.m in Sources */,
+				A4EBE8EC1AEDAD6D00DE0B42 /* RegexClass.swift in Sources */,
 				A39E0B9A1A5E20380097B3B8 /* Marker.swift in Sources */,
 				A3DA35AF1A7EBAC500AED5CD /* HTTPRequestSerializer.swift in Sources */,
 				A3A882A31A64C1D300276C86 /* MapAnnotation.swift in Sources */,

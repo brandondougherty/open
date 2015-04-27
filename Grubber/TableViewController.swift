@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDelegate, GADInterstitialDelegate, UISearchDisplayDelegate, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate  {
+class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDelegate, GADInterstitialDelegate, UISearchDisplayDelegate, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate, UISearchResultsUpdating  {
     let RADIUS:Int = 5000
     let APIKey: String = "AIzaSyAEYAoIJXeiPhTCfDOb28LsPMDnrUqZDT4"
     var mapView: MKMapView! = MKMapView()
@@ -61,12 +61,17 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     var loadRequestAllowed = true
     var bannerDisplayed = false
     let statusbarHeight:CGFloat = 20.0
-   
+    
+     var resultSearchController = UISearchController()
+    var filteredTableData = [Location]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if(Singleton.sharedInstance.zipcode != true){
             initLocationManager();
         }
+        
+       
         let deviceModel = UIDevice.currentDevice().model
         println(deviceModel)
         navigationController?.navigationBar.hidden = false
@@ -90,7 +95,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         
         navigationItem.titleView = imageView
         
-        self.tableView = UITableView(frame: CGRectMake(0, self.view.frame.height/2 - 30,self.view.frame.width, self.view.frame.height), style: UITableViewStyle.Plain)
+        self.tableView = UITableView(frame: CGRectMake(0, self.view.frame.height/2 - 40,self.view.frame.width, self.view.frame.height/2 + 40), style: UITableViewStyle.Plain)
         
         var nib = UINib(nibName: "Cell", bundle: nil)
         self.tableView.registerNib(nib, forCellReuseIdentifier: "Cell")
@@ -118,18 +123,27 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         tableView.backgroundColor = UIColor.clearColor()
         tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
         tableView.separatorInset = UIEdgeInsetsZero
-        
+        self.resultSearchController = ({
+            let controller = UISearchController(searchResultsController: nil)
+            controller.dimsBackgroundDuringPresentation = false
+            controller.searchBar.sizeToFit()
+            controller.searchResultsUpdater = self
+            controller.hidesNavigationBarDuringPresentation = false
+
+            
+            self.tableView.tableHeaderView = controller.searchBar
+            
+            return controller
+        })()
+        //blue map button
         self.button = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
-        button.frame = CGRectMake(self.view.frame.width/2-30, self.view.frame.size.height/2, 60, 60)
+        button.frame = CGRectMake(self.view.frame.width/2-30, self.view.frame.size.height/2 - 10, 60, 60)
         button.setImage(UIImage(named: "mapButton"), forState: .Normal)
         button.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
-        //let panGesture = UIPanGestureRecognizer(target: self, action: "buttonAction :")
-        //button.addGestureRecognizer(panGesture)
-        
         button.layer.cornerRadius = 10.0
         self.view.addSubview(button)
         self.button.hidden = true
-        
+        //nav top right drop down button
         let start = UIImage(named: "drop_dots")
         let image0 = UIImage(named: "drop_dots")
         let image1 = UIImage(named: "dist_drop")
@@ -143,6 +157,20 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
             self.loadStuff()
         }
     }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        //do whatever with searchController here.
+        if(searchController.searchBar.text != nil){
+            println(searchController.searchBar.text)
+            
+            filteredTableData.removeAll(keepCapacity: false)
+            filteredTableData = Singleton.sharedInstance.locations.filter{Regex("\(searchController.searchBar.text).*").test($0.name)}
+            
+            self.tableView.reloadData()
+        }
+        
+    }
+  
     func sphereDidSelected(index: Int) {
         println(index)
         if(index == 1){
@@ -278,7 +306,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         button.addGestureRecognizer(panGesture)
     }
     func returnAction(sender: UIButton!) {
-        animateMapPanelYPositionY(targetPosition: 20)
+        animateMapPanelYPositionY(targetPosition: 30)
         self.tableView.frame.size.height = self.view.frame.size.height/2 + 30
         self.tableView.frame.origin.y = self.view.frame.size.height/2 - 30
         button.removeTarget(self, action: "returnAction:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -291,7 +319,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     func animateMapPanelYPositionY(#targetPosition: CGFloat, completion: ((Bool) -> Void)! = nil) {
         UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .CurveEaseInOut, animations: {
             self.tempView.frame.origin.y = targetPosition
-            self.button.frame.origin.y = (self.view.frame.size.height/2) - 10 + targetPosition
+            self.button.frame.origin.y = (self.view.frame.size.height/2) - 25 + targetPosition
             }, completion: completion)
     }
  
@@ -312,7 +340,13 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                 return 20 + (Singleton.sharedInstance.page * 20) + 1
             }
         }*/
-        return Singleton.sharedInstance.locations.count
+        if (self.resultSearchController.active) {
+            return self.filteredTableData.count
+        }
+        else {
+            return Singleton.sharedInstance.locations.count
+        }
+        
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.selectedRowIndex = indexPath
@@ -363,21 +397,22 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         cell.preservesSuperviewLayoutMargins = false
         
         if(Singleton.sharedInstance.locations.count != 0){
-          // if(indexPath.row < Singleton.sharedInstance.locations.count){
+            if (self.resultSearchController.active) {
+                println(indexPath.row)
+                let Stores = filteredTableData[indexPath.row]
+                cell.listNumber.text = String(indexPath.row + 1)
+                cell.loadItem(name:Stores.name ,open:Stores.open_now, location: Stores.vicinity, timeLeft: Stores.howMuchLonger,hoursToday: Stores.hours, nextHours: Stores.nextHours, yestHour: Stores.yestHour,phone: Stores.phone,lat: Stores.lat, long : Stores.long, dist: Stores.distance, ratingDouble : Stores.rating )
+                return cell
+            }
+            else {
                 let Stores = Singleton.sharedInstance.locations[indexPath.row]
                 cell.listNumber.text = String(indexPath.row + 1)
-            cell.loadItem(name:Stores.name ,open:Stores.open_now, location: Stores.vicinity, timeLeft: Stores.howMuchLonger,hoursToday: Stores.hours, nextHours: Stores.nextHours, yestHour: Stores.yestHour,phone: Stores.phone,lat: Stores.lat, long : Stores.long, dist: Stores.distance, ratingDouble : Stores.rating )
-           // if (indexPath.row == 20 + (Singleton.sharedInstance.page * 20) - 2 && Singleton.sharedInstance.page <= Singleton.sharedInstance.maxPage)
-           //   {
-                    //Singleton.sharedInstance.page++;
-                    //println(Singleton.sharedInstance.page)
-                  //  dispatch_async(dispatch_get_main_queue(), {
-                    //    self.tableView.reloadData()// println("tabvleview ready")
-                        
-                    //})
-                    
-               // }
-           //}
+                cell.loadItem(name:Stores.name ,open:Stores.open_now, location: Stores.vicinity, timeLeft: Stores.howMuchLonger,hoursToday: Stores.hours, nextHours: Stores.nextHours, yestHour: Stores.yestHour,phone: Stores.phone,lat: Stores.lat, long : Stores.long, dist: Stores.distance, ratingDouble : Stores.rating )
+                
+                return cell
+            }
+            
+
         }
         return cell
     }
