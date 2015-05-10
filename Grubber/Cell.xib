@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -47,7 +47,7 @@
                         <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qrS-0R-mqA" userLabel="clock">
-                        <rect key="frame" x="16" y="82" width="27" height="27"/>
+                        <rect key="frame" x="16" y="82" width="24" height="25"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r15-aG-PPn" userLabel="stitch1">
                         <rect key="frame" x="5" y="115" width="372" height="2"/>
@@ -62,10 +62,10 @@
                         <rect key="frame" x="5" y="201" width="372" height="2"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pF4-uO-8E3" userLabel="phone">
-                        <rect key="frame" x="18" y="169" width="24" height="24"/>
+                        <rect key="frame" x="16" y="169" width="24" height="24"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cKM-pH-SZn" userLabel="star">
-                        <rect key="frame" x="18" y="213" width="24" height="24"/>
+                        <rect key="frame" x="16" y="213" width="24" height="24"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="hours2 ada" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gs7-4z-3q1">
                         <rect key="frame" x="68" y="75" width="270" height="39"/>
@@ -85,7 +85,7 @@
                         </connections>
                     </button>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BtX-HN-lo1" userLabel="loc">
-                        <rect key="frame" x="18" y="126" width="22" height="22"/>
+                        <rect key="frame" x="16" y="126" width="24" height="24"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="4.8/5.0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Kk-jA-AGC">
                         <rect key="frame" x="68" y="211" width="244" height="30"/>
@@ -104,10 +104,18 @@
                             <action selector="getDirections:" destination="C3r-4R-wjc" eventType="touchUpInside" id="vBt-XI-SG8"/>
                         </connections>
                     </button>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PuE-Ip-Yiv">
+                        <rect key="frame" x="346" y="44" width="12" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="12" id="JtX-yM-q5P"/>
+                            <constraint firstAttribute="width" constant="12" id="ur5-5i-AcY"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 <constraints>
                     <constraint firstItem="UBo-QB-TQO" firstAttribute="leading" secondItem="dsd-VP-O8D" secondAttribute="leadingMargin" constant="61" id="FO3-iC-hhL"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="PuE-Ip-Yiv" secondAttribute="trailing" constant="10" id="gAi-Dd-A1U"/>
                     <constraint firstAttribute="trailingMargin" secondItem="gs7-4z-3q1" secondAttribute="trailing" constant="30" id="hp8-69-o71"/>
                     <constraint firstItem="gs7-4z-3q1" firstAttribute="leading" secondItem="dsd-VP-O8D" secondAttribute="leadingMargin" constant="60" id="hzu-rV-wa2"/>
                     <constraint firstItem="Fl2-Yg-KG1" firstAttribute="top" secondItem="dsd-VP-O8D" secondAttribute="topMargin" constant="7" id="klN-f6-DQs"/>
@@ -135,6 +143,7 @@
                 <outlet property="stitch1" destination="r15-aG-PPn" id="hBX-cd-HUG"/>
                 <outlet property="stitch2" destination="5rK-ha-iil" id="asq-C1-XYd"/>
                 <outlet property="stitch3" destination="JV1-WI-rEh" id="23k-yo-gDW"/>
+                <outlet property="timeLeftColor" destination="PuE-Ip-Yiv" id="gsm-pg-Oq7"/>
             </connections>
             <point key="canvasLocation" x="119" y="234"/>
         </tableViewCell>

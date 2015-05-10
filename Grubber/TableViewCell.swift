@@ -20,6 +20,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var listNumber: UILabel!
     @IBOutlet weak var hours: UILabel!
     
+    @IBOutlet weak var timeLeftColor: UIImageView!
     @IBOutlet weak var numberIconBackground: UIImageView!
     @IBOutlet weak var getDirectionsLabel: UIButton!
     
@@ -86,7 +87,7 @@ class TableViewCell: UITableViewCell {
         hours.text = hoursToday
         let image1 = UIImage(named: "green")
         numberIconBackground.image = UIImage(named: "numberIcon")
-        phoneIcon.image = UIImage(named: "phoneIcon")
+        phoneIcon.image = UIImage(named: "phoneicon")
         clockIcon.image = UIImage(named: "clockicon")
         starIcon.image = UIImage(named: "star_icon")
         locIcon.image = UIImage(named: "locIcon")
@@ -99,7 +100,14 @@ class TableViewCell: UITableViewCell {
         self.latitude = lat
         self.longitude = long
         self.name = name
-            
+        println("-----------------\(timeLeft)")
+        if(timeLeft >= 60){
+            timeLeftColor.image = UIImage(named: "greenLight")
+        }else if(timeLeft > 30 && timeLeft < 60){
+            timeLeftColor.image = UIImage(named: "yellowLight")
+        }else if(timeLeft <= 30){
+            timeLeftColor.image = UIImage(named: "redLight")
+        }
         distance.text = dist
         var c:String = String(format:"%.1f", ratingDouble)
         if(ratingDouble == 0){

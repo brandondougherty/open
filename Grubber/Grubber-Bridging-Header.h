@@ -5,4 +5,6 @@
 #import "GADBannerView.h"
 #import "GADInterstitialDelegate.h"
 #import "GADInterstitial.h"
+#import "GAI.h"
+#import "GAIDictionaryBuilder.h"
 #endif

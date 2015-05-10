@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDelegate, GADInterstitialDelegate, UISearchDisplayDelegate, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate, UISearchResultsUpdating  {
+class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDelegate, GADInterstitialDelegate, UISearchControllerDelegate, UISearchDisplayDelegate, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate, UISearchResultsUpdating  {
     let RADIUS:Int = 5000
     let APIKey: String = "AIzaSyAEYAoIJXeiPhTCfDOb28LsPMDnrUqZDT4"
     var mapView: MKMapView! = MKMapView()
@@ -36,6 +36,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     var button: UIButton!
     var loadingView: UIButton!
     var menu : SphereMenu!
+    //var menu : MenuView!
     //Animations
   
     var snap: UISnapBehavior!
@@ -56,8 +57,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     var searchBar :UISearchBar!
     var searchDisplayControllers : UISearchController!
     
-    //Ads  
-    var interstitial:GADInterstitial?
+    //Ads
     var loadRequestAllowed = true
     var bannerDisplayed = false
     let statusbarHeight:CGFloat = 20.0
@@ -70,8 +70,9 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         if(Singleton.sharedInstance.zipcode != true){
             initLocationManager();
         }
-        
-       
+        if(Singleton.sharedInstance.interstitial != nil){
+            Singleton.sharedInstance.interstitial!.delegate = self
+        }
         let deviceModel = UIDevice.currentDevice().model
         println(deviceModel)
         navigationController?.navigationBar.hidden = false
@@ -129,10 +130,10 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
             controller.searchBar.sizeToFit()
             controller.searchResultsUpdater = self
             controller.hidesNavigationBarDuringPresentation = false
-
+            controller.delegate = self
             
             self.tableView.tableHeaderView = controller.searchBar
-            
+            self.tableView.tableHeaderView?.hidden = true
             return controller
         })()
         //blue map button
@@ -143,6 +144,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         button.layer.cornerRadius = 10.0
         self.view.addSubview(button)
         self.button.hidden = true
+        
         //nav top right drop down button
         let start = UIImage(named: "drop_dots")
         let image0 = UIImage(named: "drop_dots")
@@ -151,15 +153,19 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         var images:[UIImage] = [image0!,image1!,image2!]
         menu = SphereMenu(startPoint: CGPointMake(self.view.frame.width - 30, 40), startImage: start!, submenuImages:images)
         menu.delegate = self
+        
         self.navigationController?.view.addSubview(menu)
         
         if(Singleton.sharedInstance.zipcode){
             self.loadStuff()
         }
     }
-    
+    func didDismissSearchController(searchController: UISearchController) {
+        self.button.userInteractionEnabled = true
+    }
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         //do whatever with searchController here.
+        self.button.userInteractionEnabled = false
         if(searchController.searchBar.text != nil){
             println(searchController.searchBar.text)
             
@@ -203,31 +209,36 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
   
     //Interstitial func
     func createAndLoadInterstitial()->GADInterstitial {
+        if let isReady = Singleton.sharedInstance.interstitial?.isReady {
+            Singleton.sharedInstance.interstitial?.presentFromRootViewController(self)
+            return Singleton.sharedInstance.interstitial!;
+        }else{
         println("createAndLoadInterstitial")
-        var interstitial = GADInterstitial()
-        interstitial.delegate = self
-        interstitial.adUnitID = "ca-app-pub-1449159202125999/8102937464"
+        Singleton.sharedInstance.interstitial = GADInterstitial()
+        Singleton.sharedInstance.interstitial!.delegate = self
+        Singleton.sharedInstance.interstitial!.adUnitID = "ca-app-pub-1449159202125999/8102937464"
         
         var requestAd = GADRequest()
         if(coord != nil){
             requestAd.setLocationWithLatitude(CGFloat(Singleton.sharedInstance.lat), longitude: CGFloat(Singleton.sharedInstance.long), accuracy: 10000)
         }
        // requestAd.testDevices = [ GAD_SIMULATOR_ID ];
-        interstitial.loadRequest(requestAd)
+        Singleton.sharedInstance.interstitial!.loadRequest(requestAd)
         
-        return interstitial
+        return Singleton.sharedInstance.interstitial!
+        }
     }
     
     func presentInterstitial() {
-        if let isReady = interstitial?.isReady {
-            interstitial?.presentFromRootViewController(self)
+        if let isReady = Singleton.sharedInstance.interstitial?.isReady {
+            Singleton.sharedInstance.interstitial?.presentFromRootViewController(self)
         }
     }
     
     //Interstitial delegate
     func interstitial(ad: GADInterstitial!, didFailToReceiveAdWithError error: GADRequestError!) {
         println("interstitialDidFailToReceiveAdWithError:\(error.localizedDescription)")
-        interstitial = createAndLoadInterstitial()
+       // Singleton.sharedInstance.interstitial = createAndLoadInterstitial()
     }
     
     func interstitialDidReceiveAd(ad: GADInterstitial!) {
@@ -241,10 +252,13 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         dispatch_async(dispatch_get_main_queue(), {
             self.button.hidden = false
             self.tempView.hidden = false
-            self.loadingView.hidden = true
+            if(self.loadingView != nil){
+                self.loadingView.hidden = true
+            }
             self.shouldStopRotating = true
             self.tableView.reloadData()
             self.tableView.hidden = false
+            self.tableView.tableHeaderView?.hidden = false
         })
     }
     
@@ -276,7 +290,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     }
     func popToRoot(sender:UIBarButtonItem){
         Singleton.sharedInstance.page = 0;
-        interstitial = nil
+        Singleton.sharedInstance.interstitial = nil
         for subview in self.navigationController!.view.subviews {
             if (subview.tag == 1001 || subview.tag == 1002 || subview.tag == 1003) {
                 print(subview)
@@ -326,7 +340,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     func refresh(sender:AnyObject)
     {
         //Singleton.sharedInstance.locations = [Location]()
-        initLocationManager();
+        //initLocationManager();
         self.refreshControler.endRefreshing()
     }
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -384,7 +398,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if Singleton.sharedInstance.cellExpansionArray[indexPath.row] == 1{
             
-            return self.view.frame.size.height/2 - 30
+            return 250
         }
         return 70
     }
@@ -455,7 +469,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
             var locationObj = locationArray.lastObject as! CLLocation
             self.coord = locationObj.coordinate
             println("createAndLoadInterstitial")
-            interstitial = createAndLoadInterstitial()
+            Singleton.sharedInstance.interstitial = createAndLoadInterstitial()
             Singleton.sharedInstance.lat = self.coord.latitude
             Singleton.sharedInstance.long = self.coord.longitude
             println(self.coord.latitude)
@@ -467,7 +481,8 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     }
     func loadStuff(){
         println("createAndLoadInterstitial")
-        interstitial = createAndLoadInterstitial()
+        
+        Singleton.sharedInstance.interstitial = createAndLoadInterstitial()
         //MAP
         mapView.mapType = .Standard
         mapView.frame = CGRectMake(0, 0, self.tempView.frame.width, self.tempView.frame.height)
@@ -924,7 +939,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
                 //show zip code input field
                 NSLog("Denied access: \(locationStatus)")
                 println("createAndLoadInterstitial")
-                interstitial = createAndLoadInterstitial()
+                Singleton.sharedInstance.interstitial = createAndLoadInterstitial()
             }
     }
 }

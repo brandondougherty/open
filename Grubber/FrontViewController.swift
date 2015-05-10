@@ -9,17 +9,23 @@
 import Foundation
 import UIKit
 
-class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFieldDelegate{
+class FrontViewController: GAITrackedViewController,GADBannerViewDelegate, GADInterstitialDelegate, CLLocationManagerDelegate, UITextFieldDelegate{
     var button: UIButton!
-    
+     var coord : CLLocationCoordinate2D!
     var seenError : Bool = false
     var locationFixAchieved : Bool = false
     var locationStatus : NSString = "Not Started"
     var myTextField: UITextField!
     var locationManager: CLLocationManager! = nil
+    
    @IBOutlet var sliderDisplayLabel : UILabel!
+    
+    var loadRequestAllowed = true
+    var bannerDisplayed = false
+    let statusbarHeight:CGFloat = 20.0
 
     override func viewDidLoad() {
+        self.screenName = "Front Page"
        initLocationManager();
         navigationController?.navigationBar.hidden = true
         navigationController?.view.backgroundColor = UIColor(red: 22.0/255.0, green: 196.0/255.0, blue: 89.0/255.0, alpha: 1)
@@ -132,6 +138,70 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
         //close button
         
     }
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        Singleton.sharedInstance.interstitial = nil
+        Singleton.sharedInstance.interstitial = createAndLoadInterstitial()
+    }
+    //Interstitial func
+    func createAndLoadInterstitial()->GADInterstitial {
+        println("createAndLoadInterstitial")
+        Singleton.sharedInstance.interstitial = GADInterstitial()
+        Singleton.sharedInstance.interstitial!.delegate = self
+        Singleton.sharedInstance.interstitial!.adUnitID = "ca-app-pub-1449159202125999/8102937464"
+        
+        var requestAd = GADRequest()
+        if(coord != nil){
+            requestAd.setLocationWithLatitude(CGFloat(Singleton.sharedInstance.lat), longitude: CGFloat(Singleton.sharedInstance.long), accuracy: 10000)
+        }
+        // requestAd.testDevices = [ GAD_SIMULATOR_ID ];
+        Singleton.sharedInstance.interstitial!.loadRequest(requestAd)
+        
+        return Singleton.sharedInstance.interstitial!
+    }
+    
+    func presentInterstitial() {
+        if let isReady = Singleton.sharedInstance.interstitial?.isReady {
+            Singleton.sharedInstance.interstitial?.presentFromRootViewController(self)
+        }
+    }
+    
+    //Interstitial delegate
+    func interstitial(ad: GADInterstitial!, didFailToReceiveAdWithError error: GADRequestError!) {
+        println("interstitialDidFailToReceiveAdWithError:\(error.localizedDescription)")
+        Singleton.sharedInstance.interstitial = createAndLoadInterstitial()
+    }
+    
+    func interstitialDidReceiveAd(ad: GADInterstitial!) {
+        /////hereeeeeeee
+        println("interstitialDidReceiveAd")
+       // presentInterstitial()
+    }
+    
+    func interstitialWillDismissScreen(ad: GADInterstitial!) {
+        println("interstitialWillDismissScreen")
+        dispatch_async(dispatch_get_main_queue(), {
+          /*  self.button.hidden = false
+            self.tempView.hidden = false
+            self.loadingView.hidden = true
+            self.shouldStopRotating = true
+            self.tableView.reloadData()
+            self.tableView.hidden = false*/
+        })
+    }
+    
+    func interstitialDidDismissScreen(ad: GADInterstitial!) {
+        println("interstitialDidDismissScreen")
+    }
+    
+    func interstitialWillLeaveApplication(ad: GADInterstitial!) {
+        println("interstitialWillLeaveApplication")
+    }
+    
+    func interstitialWillPresentScreen(ad: GADInterstitial!) {
+        println("interstitialWillPresentScreen")
+    }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool // called when 'return' key pressed. return NO to ignore.
     {
         textField.resignFirstResponder()
@@ -218,7 +288,7 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
         if(val > 1){
           feedbackString = NSString(format:"%.0lfmi",val) as String
         }else{
-          feedbackString = NSString(format: "%.2lfmi", val) as String
+          feedbackString = NSString(format: "%.1lfmi", val) as String
         }
         
         Singleton.sharedInstance.sliderValue = Float(val) * 1609.34
@@ -237,7 +307,46 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
     }
+    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+        locationManager.stopUpdatingLocation()
+        if ((error) != nil) {
+            if (seenError == false) {
+                seenError = true
+                //this occurs if location is set to allowed but there was an error retrieving it
+                print("BRANDON TEST")
+                let alertController = UIAlertController(
+                    title: "Well...",
+                    message: "Looks like your location is ON but your phone cant find your location. Try closing this app and reopening it.",
+                    preferredStyle: .Alert)
+                
+                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+                alertController.addAction(cancelAction)
+                
+                self.presentViewController(alertController, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+        if (locationFixAchieved == false) {
+            locationFixAchieved = true
+            var locationArray = locations as NSArray
+            var locationObj = locationArray.lastObject as! CLLocation
+            self.coord = locationObj.coordinate
+            
+            Singleton.sharedInstance.lat = self.coord.latitude
+            Singleton.sharedInstance.long = self.coord.longitude
+            println("createAndLoadInterstitial")
+            Singleton.sharedInstance.interstitial = createAndLoadInterstitial()
+            println(self.coord.latitude)
+            println(self.coord.longitude)
+            locationManager.stopUpdatingLocation()
+        }
+        
+    }
     func foodAction(sender: UIButton!) {
+        let tracker = GAI.sharedInstance().defaultTracker
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Button Press", label: "Food Button", value: nil).build() as AnyObject as! [NSObject : AnyObject])
         Singleton.sharedInstance.madeRequest = "food"
         
         if(Singleton.sharedInstance.zipcode){
@@ -247,6 +356,7 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
             geocoder.geocodeAddressString(address, completionHandler: {(placemarks, error)->Void in
                 if error == nil {
                     if let placemark = placemarks?[0] as? CLPlacemark {
+                        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Zip Code Used", label: "Food Button", value: nil).build() as AnyObject as! [NSObject : AnyObject])
                         Singleton.sharedInstance.lat = placemark.location.coordinate.latitude
                         Singleton.sharedInstance.long = placemark.location.coordinate.longitude
                         self.navigationController?.setNavigationBarHidden(false, animated: true)
@@ -254,6 +364,7 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
                         self.navigationController?.pushViewController(vc,animated:true)
                     }else{
                         //error couldnt find location
+                        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Zip Code Used", label: "Geocoder could not locate place", value: nil).build() as AnyObject as! [NSObject : AnyObject])
                         let alertController = UIAlertController(
                             title: "Error",
                             message: "Looks like Apple geocoder could not find that City or Zip Code. Check your spelling.",
@@ -265,6 +376,7 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
                     }
                 }else{
                     //error couldnt find location
+                    tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Zip Code Used", label: "Geocoder could not locate place", value: nil).build() as AnyObject as! [NSObject : AnyObject])
                     let alertController = UIAlertController(
                         title: "Error",
                         message: "Looks like Apple geocoder could not find that City or Zip Code. Check your spelling.",
@@ -277,12 +389,15 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
                 }
             })
         }else{
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "User Location Used", label: "Food Button", value: nil).build() as AnyObject as! [NSObject : AnyObject])
             self.navigationController?.setNavigationBarHidden(false, animated: true)
             let vc = TableViewController() //change this to your class name
             self.navigationController?.pushViewController(vc,animated:true)
         }
     }
     func barAction(sender: UIButton!) {
+        let tracker = GAI.sharedInstance().defaultTracker
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Button Pressed", label: "Bar Button", value: nil).build() as AnyObject as! [NSObject : AnyObject])
         Singleton.sharedInstance.madeRequest = "bar"
         if(Singleton.sharedInstance.zipcode){
         var address = self.myTextField.text
@@ -291,6 +406,7 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
         geocoder.geocodeAddressString(address, completionHandler: {(placemarks, error)->Void in
             if error == nil {
                 if let placemark = placemarks?[0] as? CLPlacemark {
+                    tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Zip Code Used", label: "Bar Button", value: nil).build() as AnyObject as! [NSObject : AnyObject])
                     Singleton.sharedInstance.lat = placemark.location.coordinate.latitude
                     Singleton.sharedInstance.long = placemark.location.coordinate.longitude
                     self.navigationController?.setNavigationBarHidden(false, animated: true)
@@ -302,7 +418,7 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
                         title: "Ooops!",
                         message: "Looks like Apple geocoder could not find that City or Zip Code. Check your spelling.",
                         preferredStyle: .Alert)
-                    
+                    tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Zip Code Used", label: "Geocoder could not locate place", value: nil).build() as AnyObject as! [NSObject : AnyObject])
                     let cancelAction = UIAlertAction(title: "Close", style: .Cancel, handler: nil)
                     alertController.addAction(cancelAction)
                     self.presentViewController(alertController, animated: true, completion: nil)
@@ -313,21 +429,24 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
                     title: "Error",
                     message: "Looks like Apple geocoder could not find that City or Zip Code. Check your spelling.",
                     preferredStyle: .Alert)
-                
+                 tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Zip Code Used", label: "Geocoder could not locate place", value: nil).build() as AnyObject as! [NSObject : AnyObject])
                 let cancelAction = UIAlertAction(title: "Close", style: .Cancel, handler: nil)
                 alertController.addAction(cancelAction)
                 self.presentViewController(alertController, animated: true, completion: nil)
             }
         })
         }else{
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "User Location Used", label: "Bar Button", value: nil).build() as AnyObject as! [NSObject : AnyObject])
             self.navigationController?.setNavigationBarHidden(false, animated: true)
             let vc = TableViewController() //change this to your class name
             self.navigationController?.pushViewController(vc,animated:true)
         }
     }
     func zipcodeAction(sender: UIButton!) {
+        let tracker = GAI.sharedInstance().defaultTracker
         Singleton.sharedInstance.zipcode = true
         if(myTextField.userInteractionEnabled){
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Button Pressed", label: "Zip Code OFF", value: nil).build() as AnyObject as! [NSObject : AnyObject])
             myTextField.userInteractionEnabled = false
             let buttonImageNormal = UIImage(named: "locationIcon")
             sender.setImage(buttonImageNormal, forState: .Normal)
@@ -336,6 +455,7 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
             self.myTextField.placeholder = "Current Location"
             Singleton.sharedInstance.zipcode = false
         }else{
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Button Pressed", label: "Zip Code ON", value: nil).build() as AnyObject as! [NSObject : AnyObject])
             myTextField.userInteractionEnabled = true
             let buttonImageNormal = UIImage(named: "locationIconZIP")
             sender.setImage(buttonImageNormal, forState: .Normal)
@@ -354,38 +474,33 @@ class FrontViewController: UIViewController,CLLocationManagerDelegate, UITextFie
     func locationManager(manager: CLLocationManager!,
         didChangeAuthorizationStatus status: CLAuthorizationStatus) {
             var shouldIAllow = false
+            let tracker = GAI.sharedInstance().defaultTracker
             switch status {
+            case CLAuthorizationStatus.Restricted:
+                locationStatus = "Restricted Access to location"
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Location Status", label: "Restricted", value: nil).build() as AnyObject as! [NSObject : AnyObject])
+            case CLAuthorizationStatus.Denied:
+                locationStatus = "User denied access to location"
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Location Status", label: "User denied access to location", value: nil).build() as AnyObject as! [NSObject : AnyObject])
             case CLAuthorizationStatus.NotDetermined:
                 locationStatus = "Status not determined"
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Location Status", label: "Status not determined", value: nil).build() as AnyObject as! [NSObject : AnyObject])
                 manager.requestWhenInUseAuthorization()
-            case .AuthorizedWhenInUse, .Restricted, .Denied:
-                let alertController = UIAlertController(
-                    title: "Background Location Access Disabled",
-                    message: "In order to be notified about delicious food near you, please open this app's settings and set location access to 'Allow'.",
-                    preferredStyle: .Alert)
-                
-                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-                alertController.addAction(cancelAction)
-                
-                let openAction = UIAlertAction(title: "Open Settings", style: .Default) { (action) in
-                    if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                        UIApplication.sharedApplication().openURL(url)
-                    }
-                }
-                alertController.addAction(openAction)
-                
-                self.presentViewController(alertController, animated: true, completion: nil)
             default:
                 locationStatus = "Allowed to location Access"
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Location Status", label: "Allowed to location Access", value: nil).build() as AnyObject as! [NSObject : AnyObject])
                 shouldIAllow = true
             }
-            NSNotificationCenter.defaultCenter().postNotificationName("LabelHasbeenUpdated", object: nil)
             if (shouldIAllow == true) {
                 NSLog("Location to Allowed")
+                // Start location services
+                locationManager.startUpdatingLocation()
             } else {
                 //show zip code input field
-                
                 NSLog("Denied access: \(locationStatus)")
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Location Status", label: "Denied access: \(locationStatus)", value: nil).build() as AnyObject as! [NSObject : AnyObject])
+                println("createAndLoadInterstitial")
+                Singleton.sharedInstance.interstitial = createAndLoadInterstitial()
             }
     }
 

@@ -39,4 +39,5 @@ class Singleton {
     var distSort : Bool = false
     var timeSort : Bool = false
     var scrollNumber : Int = 0
+    var interstitial:GADInterstitial?
 }

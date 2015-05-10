@@ -34,7 +34,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.backgroundColor = UIColor.whiteColor()
         self.window?.makeKeyAndVisible()
     
-
+        let tracker = GAI.sharedInstance()
+        tracker.trackUncaughtExceptions = true
+        tracker.dispatchInterval = 20
+        tracker.logger.logLevel = GAILogLevel(rawValue: 4)!
+        tracker.trackerWithTrackingId("UA-62772435-3")
         // Override point for customization after application launch.
         // GMSServices.provideAPIKey("AIzaSyBHrmnOPA66NR5YKgfkY62BchjUqWDnm74");
        /* */
