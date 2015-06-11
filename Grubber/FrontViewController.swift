@@ -361,7 +361,9 @@ class FrontViewController: GAITrackedViewController,GADBannerViewDelegate, GADIn
                         Singleton.sharedInstance.long = placemark.location.coordinate.longitude
                         self.navigationController?.setNavigationBarHidden(false, animated: true)
                         let vc = TableViewController() //change this to your class name
-                        self.navigationController?.pushViewController(vc,animated:true)
+                        let rightViewController = RightViewController()
+                        let slideMenuController = SlideMenuController(mainViewController:vc, rightMenuViewController: rightViewController)
+                        self.navigationController?.pushViewController(slideMenuController,animated:true)
                     }else{
                         //error couldnt find location
                         tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "Zip Code Used", label: "Geocoder could not locate place", value: nil).build() as AnyObject as! [NSObject : AnyObject])
@@ -392,7 +394,9 @@ class FrontViewController: GAITrackedViewController,GADBannerViewDelegate, GADIn
             tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "User Location Used", label: "Food Button", value: nil).build() as AnyObject as! [NSObject : AnyObject])
             self.navigationController?.setNavigationBarHidden(false, animated: true)
             let vc = TableViewController() //change this to your class name
-            self.navigationController?.pushViewController(vc,animated:true)
+            let rightViewController = RightViewController()
+            let slideMenuController = SlideMenuController(mainViewController:vc, rightMenuViewController: rightViewController)
+            self.navigationController?.pushViewController(slideMenuController,animated:true)
         }
     }
     func barAction(sender: UIButton!) {
@@ -411,7 +415,9 @@ class FrontViewController: GAITrackedViewController,GADBannerViewDelegate, GADIn
                     Singleton.sharedInstance.long = placemark.location.coordinate.longitude
                     self.navigationController?.setNavigationBarHidden(false, animated: true)
                     let vc = TableViewController() //change this to your class name
-                    self.navigationController?.pushViewController(vc,animated:true)
+                    let rightViewController = RightViewController()
+                    let slideMenuController = SlideMenuController(mainViewController:vc, rightMenuViewController: rightViewController)
+                    self.navigationController?.pushViewController(slideMenuController,animated:true)
                 }else{
                     //error couldnt find location
                     let alertController = UIAlertController(
@@ -439,7 +445,9 @@ class FrontViewController: GAITrackedViewController,GADBannerViewDelegate, GADIn
             tracker.send(GAIDictionaryBuilder.createEventWithCategory("Front Page", action: "User Location Used", label: "Bar Button", value: nil).build() as AnyObject as! [NSObject : AnyObject])
             self.navigationController?.setNavigationBarHidden(false, animated: true)
             let vc = TableViewController() //change this to your class name
-            self.navigationController?.pushViewController(vc,animated:true)
+            let rightViewController = RightViewController()
+            let slideMenuController = SlideMenuController(mainViewController:vc, rightMenuViewController: rightViewController)
+            self.navigationController?.pushViewController(slideMenuController,animated:true)
         }
     }
     func zipcodeAction(sender: UIButton!) {

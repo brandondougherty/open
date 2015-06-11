@@ -145,6 +145,12 @@
 		A4BE64DE1AD4E778008935F1 /* stitch.png in Resources */ = {isa = PBXBuildFile; fileRef = A4BE64DD1AD4E778008935F1 /* stitch.png */; };
 		A4EAB7A71AFDACA4009B0293 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A4EAB7A61AFDACA4009B0293 /* libsqlite3.dylib */; };
 		A4EAB7A91AFDACBF009B0293 /* libGoogleAnalyticsServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4EAB7A81AFDACBF009B0293 /* libGoogleAnalyticsServices.a */; };
+		A4EAB7AB1AFF445A009B0293 /* SlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EAB7AA1AFF445A009B0293 /* SlideMenuController.swift */; };
+		A4EAB7AD1AFF4603009B0293 /* RightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EAB7AC1AFF4603009B0293 /* RightViewController.swift */; };
+		A4EAB7AF1AFF4A15009B0293 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EAB7AE1AFF4A15009B0293 /* UIViewControllerExtension.swift */; };
+		A4EAB7B91B006F27009B0293 /* ic_menu_black_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = A4EAB7B61B006F27009B0293 /* ic_menu_black_24dp.png */; };
+		A4EAB7BA1B006F27009B0293 /* ic_menu_black_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A4EAB7B71B006F27009B0293 /* ic_menu_black_24dp@2x.png */; };
+		A4EAB7BB1B006F27009B0293 /* ic_menu_black_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A4EAB7B81B006F27009B0293 /* ic_menu_black_24dp@3x.png */; };
 		A4EBE8EC1AEDAD6D00DE0B42 /* RegexClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EBE8EB1AEDAD6D00DE0B42 /* RegexClass.swift */; };
 		A4F94B401ACF9DAA00B84AFB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4F94B3F1ACF9DAA00B84AFB /* LaunchScreen.xib */; };
 /* End PBXBuildFile section */
@@ -333,6 +339,12 @@
 		A4EAB7A51AFDAC5D009B0293 /* GAITracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAITracker.h; sourceTree = "<group>"; };
 		A4EAB7A61AFDACA4009B0293 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		A4EAB7A81AFDACBF009B0293 /* libGoogleAnalyticsServices.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGoogleAnalyticsServices.a; path = ../../Downloads/GoogleAnalyticsServicesiOS_3.11/libGoogleAnalyticsServices.a; sourceTree = "<group>"; };
+		A4EAB7AA1AFF445A009B0293 /* SlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SlideMenuController.swift; path = ../../../Downloads/SlideMenuControllerSwift/Source/SlideMenuController.swift; sourceTree = "<group>"; };
+		A4EAB7AC1AFF4603009B0293 /* RightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightViewController.swift; sourceTree = "<group>"; };
+		A4EAB7AE1AFF4A15009B0293 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
+		A4EAB7B61B006F27009B0293 /* ic_menu_black_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_menu_black_24dp.png; path = ../../../Downloads/SlideMenuControllerSwift/SlideMenuControllerSwift/Images.xcassets/ic_menu_black_24dp.imageset/ic_menu_black_24dp.png; sourceTree = "<group>"; };
+		A4EAB7B71B006F27009B0293 /* ic_menu_black_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_menu_black_24dp@2x.png"; path = "../../../Downloads/SlideMenuControllerSwift/SlideMenuControllerSwift/Images.xcassets/ic_menu_black_24dp.imageset/ic_menu_black_24dp@2x.png"; sourceTree = "<group>"; };
+		A4EAB7B81B006F27009B0293 /* ic_menu_black_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_menu_black_24dp@3x.png"; path = "../../../Downloads/SlideMenuControllerSwift/SlideMenuControllerSwift/Images.xcassets/ic_menu_black_24dp.imageset/ic_menu_black_24dp@3x.png"; sourceTree = "<group>"; };
 		A4EBE8EB1AEDAD6D00DE0B42 /* RegexClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegexClass.swift; sourceTree = "<group>"; };
 		A4F94B3F1ACF9DAA00B84AFB /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -474,6 +486,9 @@
 		A3AB46C31A5F7BAE0084C8D8 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				A4EAB7B61B006F27009B0293 /* ic_menu_black_24dp.png */,
+				A4EAB7B71B006F27009B0293 /* ic_menu_black_24dp@2x.png */,
+				A4EAB7B81B006F27009B0293 /* ic_menu_black_24dp@3x.png */,
 				A4AD5D841AD64B0D0039525A /* iphone-6+-iphone-app-icon.png */,
 				A3AC81041ABFE15A003494E2 /* dist_drop.png */,
 				A3AC81051ABFE15B003494E2 /* dist_drop@2x.png */,
@@ -645,6 +660,7 @@
 		A3C1AA051A7F625000555513 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				A4EAB7AA1AFF445A009B0293 /* SlideMenuController.swift */,
 				A3AC80FE1ABFD819003494E2 /* SphereMenu.swift */,
 				A3EBCF901A10337D007DCE06 /* MapViewController.swift */,
 				A3DA35B51A7ED69600AED5CD /* ViewExtensions.swift */,
@@ -654,6 +670,8 @@
 				A3AB46AF1A5F74A00084C8D8 /* FrontViewController.swift */,
 				A45301621AF6D19A00F73FAC /* MenuView.swift */,
 				A45301641AF6D1F300F73FAC /* QCMenuView.swift */,
+				A4EAB7AC1AFF4603009B0293 /* RightViewController.swift */,
+				A4EAB7AE1AFF4A15009B0293 /* UIViewControllerExtension.swift */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -794,6 +812,7 @@
 				A4AD5D6D1AD6490F0039525A /* drop_dots.png in Resources */,
 				A3C1AA021A7F4D0600555513 /* admob.png in Resources */,
 				A31DF60D1A8CA3A40094F115 /* buttonRight@2x.png in Resources */,
+				A4EAB7BA1B006F27009B0293 /* ic_menu_black_24dp@2x.png in Resources */,
 				A4BB478A1AF47F050043BB52 /* yellowLight@3x.png in Resources */,
 				A4BB47AA1AF48E370043BB52 /* appicon80.png in Resources */,
 				A4BB47A61AF47FE60043BB52 /* clockicon.png in Resources */,
@@ -828,11 +847,13 @@
 				A3AC81031ABFE14D003494E2 /* clock_drop.png in Resources */,
 				A4F94B401ACF9DAA00B84AFB /* LaunchScreen.xib in Resources */,
 				A4BB47961AF47F4E0043BB52 /* phoneicon@3x.png in Resources */,
+				A4EAB7BB1B006F27009B0293 /* ic_menu_black_24dp@3x.png in Resources */,
 				A3AC81071ABFE15B003494E2 /* dist_drop@2x.png in Resources */,
 				A4AD5D611AD648550039525A /* splashIcon.png in Resources */,
 				A31DF5D81A8C53A40094F115 /* backIcon.png in Resources */,
 				A31DF6171A9160D70094F115 /* locationIconZIP.png in Resources */,
 				A4BB47941AF47F4E0043BB52 /* phoneicon.png in Resources */,
+				A4EAB7B91B006F27009B0293 /* ic_menu_black_24dp.png in Resources */,
 				A4BB47881AF47F050043BB52 /* yellowLight.png in Resources */,
 				A4BB479C1AF47FA00043BB52 /* locIcon@3x.png in Resources */,
 				A4BB47951AF47F4E0043BB52 /* phoneicon@2x.png in Resources */,
@@ -876,8 +897,10 @@
 			files = (
 				A3DA35B21A7EBAC500AED5CD /* HTTPUpload.swift in Sources */,
 				A3A2E0C81A120417008E7C6D /* TableViewCell.swift in Sources */,
+				A4EAB7AF1AFF4A15009B0293 /* UIViewControllerExtension.swift in Sources */,
 				A3AC80FF1ABFD819003494E2 /* SphereMenu.swift in Sources */,
 				A45301651AF6D1F300F73FAC /* QCMenuView.swift in Sources */,
+				A4EAB7AB1AFF445A009B0293 /* SlideMenuController.swift in Sources */,
 				A3AB46B01A5F74A00084C8D8 /* FrontViewController.swift in Sources */,
 				A3DA35B81A7F398B00AED5CD /* timer.swift in Sources */,
 				A3DA35B61A7ED69600AED5CD /* ViewExtensions.swift in Sources */,
@@ -890,6 +913,7 @@
 				A34247E41A086AB7005A99F4 /* Locations.swift in Sources */,
 				A34247E81A086BED005A99F4 /* TableViewController.swift in Sources */,
 				A3DA35B41A7EC5B000AED5CD /* almofire.swift in Sources */,
+				A4EAB7AD1AFF4603009B0293 /* RightViewController.swift in Sources */,
 				A3EBCF911A10337D007DCE06 /* MapViewController.swift in Sources */,
 				A3EBCFAC1A1040BD007DCE06 /* GooglerMapClass.m in Sources */,
 				A4EBE8EC1AEDAD6D00DE0B42 /* RegexClass.swift in Sources */,

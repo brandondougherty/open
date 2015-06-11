@@ -77,26 +77,9 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         println(deviceModel)
         navigationController?.navigationBar.hidden = false
         navigationController?.view.backgroundColor = UIColor(red: 22.0/255.0, green: 196.0/255.0, blue: 89.0/255.0, alpha: 1)
-        self.view.backgroundColor = UIColor.whiteColor()
-       //HOME BUTTON
-        let buttonImageBack = UIImage(named: "backIcon") as UIImage?
-        let buttonBack   = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
-        buttonBack.addTarget(self, action: "popToRoot:", forControlEvents: UIControlEvents.TouchUpInside)
-        buttonBack.frame = CGRectMake(20, 20, 30, 50)
-        buttonBack.setImage(buttonImageBack, forState: .Normal)
-        var myCustomBackButtonItem:UIBarButtonItem = UIBarButtonItem(customView: buttonBack)
-        self.navigationItem.leftBarButtonItem  = myCustomBackButtonItem
+        self.view.backgroundColor = UIColor.whiteColor()        
         
-        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 103, height: 35))
-        imageView.contentMode = .ScaleAspectFit
-        // 4
-        let image = UIImage(named: "headerlogo")
-        imageView.image = image
-        // 5
-        
-        navigationItem.titleView = imageView
-        
-        self.tableView = UITableView(frame: CGRectMake(0, self.view.frame.height/2 - 40,self.view.frame.width, self.view.frame.height/2 + 40), style: UITableViewStyle.Plain)
+        self.tableView = UITableView(frame: CGRectMake(0, self.view.frame.height/2 - 20,self.view.frame.width, self.view.frame.height/2 + 20), style: UITableViewStyle.Plain)
         
         var nib = UINib(nibName: "Cell", bundle: nil)
         self.tableView.registerNib(nib, forCellReuseIdentifier: "Cell")
@@ -104,7 +87,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         self.tableView.dataSource = self;
         self.tableView.rowHeight = 65
         //map container
-        self.tempView = UIView(frame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 20, self.view.frame.size.width, self.view.frame.height/2))
+        self.tempView = UIView(frame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - 20, self.view.frame.size.width, self.view.frame.height/2))
 
         //pull to refresh
         self.refreshControler = UIRefreshControl()
@@ -138,7 +121,7 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         })()
         //blue map button
         self.button = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
-        button.frame = CGRectMake(self.view.frame.width/2-30, self.view.frame.size.height/2 - 10, 60, 60)
+        button.frame = CGRectMake(self.view.frame.width/2-30, self.view.frame.size.height/2 - 50, 60, 60)
         button.setImage(UIImage(named: "mapButton"), forState: .Normal)
         button.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
         button.layer.cornerRadius = 10.0
@@ -151,10 +134,10 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         let image1 = UIImage(named: "dist_drop")
         let image2 = UIImage(named: "clock_drop")
         var images:[UIImage] = [image0!,image1!,image2!]
-        menu = SphereMenu(startPoint: CGPointMake(self.view.frame.width - 30, 40), startImage: start!, submenuImages:images)
-        menu.delegate = self
+       // menu = SphereMenu(startPoint: CGPointMake(self.view.frame.width - 30, 40), startImage: start!, submenuImages:images)
+       // menu.delegate = self
         
-        self.navigationController?.view.addSubview(menu)
+        //self.navigationController?.view.addSubview(menu)
         
         if(Singleton.sharedInstance.zipcode){
             self.loadStuff()
@@ -288,27 +271,13 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         self.isRotating = false
         self.shouldStopRotating = false
     }
-    func popToRoot(sender:UIBarButtonItem){
-        Singleton.sharedInstance.page = 0;
-        Singleton.sharedInstance.interstitial = nil
-        for subview in self.navigationController!.view.subviews {
-            if (subview.tag == 1001 || subview.tag == 1002 || subview.tag == 1003) {
-                print(subview)
-                menu.start?.image = nil
-                subview.removeFromSuperview()
-            }
-            
-        }
-          navigationController?.navigationBar.hidden = true
-        navigationController?.popViewControllerAnimated(true)
-        
-    }
+   
     func dropDown(sender:UIBarButtonItem){
 
     }
  
     func buttonAction(sender: UIButton!) {
-       animateMapPanelYPositionY(targetPosition: self.view.frame.origin.y - (self.view.frame.height/2) + 64) //64 if iphone6
+       animateMapPanelYPositionY(targetPosition: self.view.frame.origin.y - (self.view.frame.height/2) - 32) //64 if iphone6
        
         self.tableView.frame.size.height = self.view.frame.size.height
         self.tableView.frame.origin.y =  0
@@ -320,9 +289,9 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         button.addGestureRecognizer(panGesture)
     }
     func returnAction(sender: UIButton!) {
-        animateMapPanelYPositionY(targetPosition: 30)
-        self.tableView.frame.size.height = self.view.frame.size.height/2 + 30
-        self.tableView.frame.origin.y = self.view.frame.size.height/2 - 30
+        animateMapPanelYPositionYZ(targetPosition: -20)
+        self.tableView.frame.size.height = self.view.frame.size.height/2 - 12
+        self.tableView.frame.origin.y = self.view.frame.size.height/2 + 12
         button.removeTarget(self, action: "returnAction:", forControlEvents: UIControlEvents.TouchUpInside)
         button.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
         let panGesture = UIPanGestureRecognizer(target: self, action: "returnAction:")
@@ -333,10 +302,16 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
     func animateMapPanelYPositionY(#targetPosition: CGFloat, completion: ((Bool) -> Void)! = nil) {
         UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .CurveEaseInOut, animations: {
             self.tempView.frame.origin.y = targetPosition
-            self.button.frame.origin.y = (self.view.frame.size.height/2) - 25 + targetPosition
+            self.button.frame.origin.y = (self.view.frame.size.height/2) + targetPosition + 7
             }, completion: completion)
     }
- 
+    
+    func animateMapPanelYPositionYZ(#targetPosition: CGFloat, completion: ((Bool) -> Void)! = nil) {
+        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .CurveEaseInOut, animations: {
+            self.tempView.frame.origin.y = -20
+            self.button.frame.origin.y = self.view.frame.size.height/2 - 15
+            }, completion: completion)
+    }
     func refresh(sender:AnyObject)
     {
         //Singleton.sharedInstance.locations = [Location]()
@@ -378,7 +353,6 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
             //animate annotation view
             var target: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: CLLocationDegrees(cell.latitude), longitude:  CLLocationDegrees(cell.longitude))
             let region = MKCoordinateRegion(center: target, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
-            
             self.mapView!.setRegion(region, animated: true)
             
             UIView.animateWithDuration(0.15, animations: {
@@ -395,13 +369,14 @@ class TableViewController:UIViewController, SphereMenuDelegate, GADBannerViewDel
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
         
     }
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if Singleton.sharedInstance.cellExpansionArray[indexPath.row] == 1{
-            
-            return 250
+            return 325
         }
         return 70
     }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //ask for a reusable cell from the tableview, the tableview will create a new one if it doesn't have any
         let cell: TableViewCell = self.tableView.dequeueReusableCellWithIdentifier("Cell") as! TableViewCell

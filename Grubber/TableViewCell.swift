@@ -91,10 +91,7 @@ class TableViewCell: UITableViewCell {
         clockIcon.image = UIImage(named: "clockicon")
         starIcon.image = UIImage(named: "star_icon")
         locIcon.image = UIImage(named: "locIcon")
-        stitch1.image = UIImage(named: "stitch")
-        stitch2.image = UIImage(named: "stitch")
-        stitch3.image = UIImage(named: "stitch")
-        stictchfirst.image = UIImage(named: "stitch")
+
         phoneText.setTitle(phone, forState: .Normal)
         self.phoneNumber = phone
         self.latitude = lat
